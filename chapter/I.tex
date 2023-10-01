@@ -1,0 +1,54 @@
+\documentclass{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{amsthm}
+\usepackage{listings}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{subcaption}
+\usepackage{cleveref}
+
+\begin{document}
+\section{Résolution de systèmes linéaires par des Méthodes Directes}
+Dans le cadre de ce premier TP, nous devions implémenter l'algorithme du \emph{Pivot de Gauss} en utilisant le langage de programmation C.
+\subsection{Détail de l'algorithme}
+Soit $A$ une matrice $ \in \mathcal{M}_{m,m}\,m \in \mathbb{N}$ et $b \in \mathcal{M}_{m,1}$ . \\
+L'algorithme de Gauss se décrit ainsi: \\ \\
+\begin{lstlisting}[mathescape=true]
+Pour $k = 1,\ldots,n-1$ Faire:
+	Pour $i=k+1,\ldots,n$ Faire:
+
+				$\alpha_i^{(k)} = \frac{a_{ik}^{(k)}}{a_{kk}^{(k)}}$ 
+		
+		Pour $j=k,\ldots,n$ Faire:
+
+		   		$a_{ij}^{(k+1)} = a_{ij}^{(k)} - \alpha_i^{(k)}a_{kj}^{(k)}$
+	
+		FIN Pour $j$
+
+				$b_i^{(k+1)} = b_i^{(k)} - \alpha_i^{(k)}b_k^{(k)}$
+
+	FIN Pour $i$
+FIN Pour $k$
+\end{lstlisting}
+Après cette algorithme permettant l'échelonnage de la matrice, pour trouver les solutions du système, on appliquera la formule suivante: \\
+\begin{Large}
+$ x_n = \frac{b_n}{a_{m,m}}$ \\
+\end{Large}
+\Large{et} \\ 
+\begin{Large}
+$ \forall i = n-1, \ldots, 1$, $x_i = \frac{1}{a_{ii}}\left( b_i-\sum\limits_{j=1+i}^n a_{ij}x_j \right)$
+\end{Large} \\ \\
+\normalsize
+La complexité temporelle de cet algorithme est cubique soit $O(n^3)$ avec une compléxité exacte de $\frac{2n^3}{3}$. \\
+Pour l'implémentation de cet algorithme, nous allons présenter deux façons de le conceptualiser avec une comparaison algorithmique des deux programmes. \\
+\subsection{Implémentation du pivot de Gauss sans matrice Augmentée}
+% \import{le fichier}
+\subsection{Implementation du pivot de Gauss avec matrice Augmentée}
+\end{document}

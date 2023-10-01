@@ -1,0 +1,46 @@
+\documentclass{report}
+%packages
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{amsthm}
+\usepackage{listings}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{subcaption}
+\usepackage{cleveref}
+
+
+%commands
+\newtheorem{defi}{Définition}
+\renewcommand{\thedefi}{\empty{}}
+
+\renewcommand\headrulewidth{1pt}
+\newcommand{\crule}[3][c]{%
+    \par\noindent
+    \makebox[\linewidth][#1]{\rule{#2\linewidth}{#3}}}
+\renewcommand{\thechapter}{\Roman{chapter}}
+
+%Style de page
+\pagestyle{fancy}
+\fancyhead[L]{}
+\fancyhead[C]{}
+\fancyhead[R]{\leftmark}
+\allowdisplaybreaks
+\geometry{hmargin=3cm,vmargin=2.5cm}
+
+%préambule
+\title{Application en Ingénieurie et Programmation Numérique\\[0.2em]\smaller{} \textit{"Rendu I - Méthodes Directes"}}
+\author{VILLEDIEU Maxance et BESQUEUT Corentin}
+\date{1 octobre 2023}
+\begin{document}
+\maketitle
+\tableofcontents
+\listoffigures
+\end{document}                                                                          
