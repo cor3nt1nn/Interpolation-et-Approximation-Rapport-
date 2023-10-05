@@ -195,19 +195,23 @@ int main(){
 \subsubsection{Commentaires du code}
 \subsubsection{Fonctions usuelles de manipulation de matrices}\label{fonctusu}
 Ce code implémente diverses fonctions pour travailler avec des matrices à coefficients en nombre flottants.\\
-
-La fonction \textit{\textbf{createMatrix}} alloue dynamiquement de la mémoire pour créer une matrice de nombres flottants avec un nombre spécifié de lignes et de colonnes.
-La fonction \textit{\textbf{printMatrix}} affiche les éléments d'une matrice de nombres flottants.
-La fonction \textit{\textbf{freeMatrix}} libère la mémoire allouée pour une matrice de nombres flottants.
-La fonction \textit{\textbf{completeMatrix}} permet à l'utilisateur de saisir des valeurs pour remplir les éléments d'une matrice de nombres flottants.
-La fonction \textit{\textbf{generateB}} génère un vecteur colonne $B$ en fonction de la somme des éléments de chaque ligne de la matrice $A$.
+\begin{itemize}
+\item La fonction \textit{\textbf{createMatrix}} alloue dynamiquement de la mémoire pour créer une matrice de nombres flottants avec un nombre spécifié de lignes et de colonnes.
+\item La fonction \textit{\textbf{printMatrix}} affiche les éléments d'une matrice de nombres flottants.
+\item La fonction \textit{\textbf{freeMatrix}} libère la mémoire allouée pour une matrice de nombres flottants.
+\item La fonction \textit{\textbf{completeMatrix}} permet à l'utilisateur de saisir des valeurs pour remplir les éléments d'une matrice de nombres flottants.
+\item La fonction \textit{\textbf{generateB}} génère un vecteur colonne $B$ en fonction de la somme des éléments de chaque ligne de la matrice $A$.
+\end{itemize}
 
 \subsubsection{Fonctions résolvant notre système linéaire $Ax=B$ à l'aide de l'algorithme de Gauss}
 Dans le cadre de notre résolution de systèmes d'équations linéaires, deux fonctions jouent des rôles clefs dans ce code : la fonction \textit{\textbf{gauss}} et la fonction \textit{\textbf{resolution}}.\\
 
-La fonction \textit{\textbf{gauss}} joue un rôle important dans la préparation de la résolution de notre système d'équations linéaires. En effectuant l'élimination de Gauss sur la matrice $A$, elle transforme cette matrice en une forme triangulaire supérieure. Cela signifie que les éléments sous la diagonale principale de la matrice deviennent tous des zéros, simplifiant ainsi la résolution du système. De plus, la fonction met également à jour la matrice $B$ en conséquence, garantissant que notre système $Ax=B$ reste équilibré.\\
+\begin{itemize}
+\item La fonction \textit{\textbf{gauss}} joue un rôle important dans la préparation de la résolution de notre système d'équations linéaires. En effectuant l'élimination de Gauss sur la matrice $A$, elle transforme cette matrice en une forme triangulaire supérieure. Cela signifie que les éléments sous la diagonale principale de la matrice deviennent tous des zéros, simplifiant ainsi la résolution du système. De plus, la fonction met également à jour la matrice $B$ en conséquence, garantissant que notre système $Ax=B$ reste équilibré.\\
 
-La fonction \textit{\textbf{resolution}}, quant à elle, prend en charge la résolution effective du système linéaire une fois que la matrice $A$ a été triangulée par la fonction \textbf{gauss}. Elle utilise la méthode de substitution pour calculer la solution et stocke le résultat dans le vecteur $X$. Cette étape finale permet d'obtenir les valeurs des variables inconnues du système, fournissant ainsi la solution recherchée pour le problème initial.\\
+\item La fonction \textit{\textbf{resolution}}, quant à elle, prend en charge la résolution effective du système linéaire une fois que la matrice $A$ a été triangulée par la fonction \textbf{gauss}. Elle utilise la méthode de substitution pour calculer la solution et stocke le résultat dans le vecteur $X$. Cette étape finale permet d'obtenir les valeurs des variables inconnues du système, fournissant ainsi la solution recherchée pour le problème initial.\\
+\end{itemize}
+
 
 En combinant ces deux fonctions avec celles citées dans la sous-section \ref{fonctusu}, le code réalise un processus complet de résolution de systèmes d'équations linéaires de manière efficace et précise.\\
 \subsubsection{Exécution du code sur quelques matrices}
