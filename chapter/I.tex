@@ -48,6 +48,48 @@ $ \forall i = n-1, \ldots, 1$, $x_i = \frac{1}{a_{ii}}\left( b_i-\sum\limits_{j=
 \normalsize
 La complexité temporelle de cet algorithme est cubique soit $O(n^3)$ avec une compléxité exacte de $\frac{2n^3}{3}$. \\
 Pour l'implémentation de cet algorithme, nous allons présenter deux façons de le conceptualiser avec une comparaison algorithmique des deux programmes. \\
+\subsection{Exemples}
+Soit $A \in \mathcal{M}_{m,m}$ et $B \in \mathcal{M}_{m,1}$ et $x$ la matrice des inconnues. \\
+Considérons alors le Système suivant $Ax=b$.\\
+Ce système peut-être représenter sous la forme d'une matrice augmentée $M$ tel que:\\
+$
+M =  \begin{pmatrix}
+a_{11}& \ldots & a_{1m} &\bigm| & b_{1} \\
+\vdots & \ddots & \vdots&\bigm| &  \vdots \\
+a_{m1} & \ldots & a_{mm} &\bigm|& b_{m} 
+\end{pmatrix}
+$
+\\
+Après exécution du pivot de Gauss, $M$ devient \\
+$
+M =  \begin{pmatrix}
+1& a_{12}& a_{13} &\ldots & a_{1m} &\bigm| & b_{1}^{'} \\
+0 & 1 & a_{23}^{'}&  \ldots &a_{2m}^{'} &\bigm| & b_{2}^{'} \\
+0 & 0 & 1 & \ldots &\vdots &\bigm| & b_{3}^{'} \\
+\vdots & \vdots & \vdots& \ddots& \vdots &\bigm| &  \vdots \\
+0 & \ldots &0 &\ldots &1&\bigm|& b_{m}^{'}
+\end{pmatrix}
+$
+Une fois que tout les pivots sont placés, il suffira de reconstituer le système et de le remonter afin de déterminer les inconnues comme suit:
+
+Soit $A^{'}=  \begin{pmatrix}
+1& a_{12}& a_{13} &\ldots & a_{1m} \\
+0 & 1 & a_{23}^{'}&  \ldots &a_{2m}^{'} \\
+0 & 0 & 1 & \ldots &\vdots\\
+\vdots & \vdots & \vdots& \ddots& \vdots \\
+0 & \ldots &0 &\ldots &1
+\end{pmatrix}
+$
+et $b = \begin{pmatrix}
+b_{1}^{'} \\
+b_{2}^{'} \\
+b_{3}^{'} \\
+\vdots \\
+ b_{m}^{'}
+\end{pmatrix}
+$
+\\
+alors pour $A^{'}x = b$ on a donc $x_i = \frac{1}{a_{ii}}\left( b_i-\sum\limits_{j=1+i}^n a_{ij}x_j \right) \forall i = n-1, \ldots, 1$.
 \subsection{Implémentation du pivot de Gauss sans matrice Augmentée}
 % \import{le fichier}
 \subsection{Implementation du pivot de Gauss avec matrice Augmentée}
