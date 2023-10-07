@@ -1,34 +1,12 @@
-\documentclass{report}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{mathtools}
-\usepackage{amssymb}
-\usepackage{hyperref}
-\usepackage{float}
-\usepackage{amsthm}
-\usepackage{listings}
-\usepackage{geometry}
-\usepackage{setspace}
-\usepackage{graphicx}
-\usepackage{fancyhdr}
-\usepackage{subcaption}
-\usepackage{cleveref}
-
-\usepackage{color}
-\definecolor{greenm}{rgb}{0.015,0.37,0.086}
-
-\lstset{ 
-  commentstyle=\color{greenm}, 
+\lstset{
   firstnumber=0, 
   numbers=left,               
   frame=single,
   language=C,                                       
   showstringspaces=false
 }
-
-\begin{document}
-\subsection{Implémentation de l'algorithme de Gauss en passant par le système d'équations linéaires}
-\subsubsection{Code source}
+\section{Implémentation de l'algorithme de Gauss en passant par le système d'équations linéaires}
+\subsection{Code source}
 Voici mon implémentation de l'algorithme de Gauss, qui n'utilise pas la matrice augmentée. En effet, l'algorithme travaille directement avec le système d'équations linéaires Ax=B.\\
 \begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont]
 #include <stdio.h>
@@ -181,8 +159,8 @@ int main(){
 	return 0;
 }
 \end{lstlisting}
-
-\subsubsection{Commentaires sur les fonctions usuelles de manipulation de matrices}\label{fonctusu}
+\subsection{Commentaires}
+\subsubsection{Fonctions usuelles de manipulation de matrices}\label{fonctusu}
 Ce code implémente diverses fonctions pour travailler avec des matrices à coefficients en nombre flottants.\\
 \begin{itemize}
 \item La fonction \textit{\textbf{createMatrix}} alloue dynamiquement de la mémoire pour créer une matrice de nombres flottants avec un nombre spécifié de lignes et de colonnes.
@@ -192,7 +170,7 @@ Ce code implémente diverses fonctions pour travailler avec des matrices à coef
 \item La fonction \textit{\textbf{generateB}} génère un vecteur colonne $B$ en fonction de la somme des éléments de chaque ligne de la matrice $A$.
 \end{itemize}
 
-\subsubsection{Commentaires sur les fonctions résolvant notre système linéaire $Ax=B$ à l'aide de l'algorithme de Gauss}
+\subsubsection{Fonctions résolvant notre système linéaire $Ax=B$ à l'aide de l'algorithme de Gauss}
 Dans le cadre de notre résolution de systèmes d'équations linéaires, deux fonctions jouent des rôles clefs dans ce code : la fonction \textit{\textbf{gauss}} et la fonction \textit{\textbf{resolution}}.\\
 
 \begin{itemize}
@@ -203,7 +181,7 @@ Dans le cadre de notre résolution de systèmes d'équations linéaires, deux fo
 
 
 En combinant ces deux fonctions avec celles citées dans la sous-section \ref{fonctusu}, le code réalise un processus complet de résolution de systèmes d'équations linéaires de manière efficace et précise (aux erreurs d'arrondies près).\\
-
+\subsection{Interaction Utilisateur/Console}
 \subsubsection{Entrées utilisateur}
 
 En premier lieu dans notre programme, nous avons besoin de spécifier le système $Ax=B$ à l'ordinateur. 
@@ -308,7 +286,7 @@ Il est à repérer que le programme affiche dans cet ordre: \\
 \end{itemize}
 
 \textit{\underline{Remarque}: le temps d'exécution de ce programme a été de 0.000237 secondes}
-\subsubsection{Exemples d'exécutions}
+\subsection{Exemples d'exécutions}
 
 Soient les matrices suivantes données dans le TP:\\
 
@@ -440,5 +418,4 @@ Temps d'execution : 0.000231 secondes
 Temps d'execution : 0.000246 secondes
 \end{lstlisting}
 
-\textbf{On remarquera} que sur le calcul de $A_4$, on tombe sur des valeur extrêmement proche de $1$. Ceci est provoqué à cause des erreurs d'arrondis provoqués par l'encodage des nombres flottants.
-\end{document}      
+\textbf{On remarquera} que sur le calcul de $A_4$, on tombe sur des valeur extrêmement proche de $1$. Ceci est provoqué à cause des erreurs d'arrondis provoqués par l'encodage des nombres flottants.     
