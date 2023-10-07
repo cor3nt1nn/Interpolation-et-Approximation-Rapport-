@@ -15,39 +15,22 @@
 \usepackage{cleveref}
 
 \usepackage{color}
-
-\definecolor{mygreen}{rgb}{0,0.6,0}
-\definecolor{mygray}{rgb}{0.5,0.5,0.5}
-\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\definecolor{greenm}{rgb}{0.015,0.37,0.086}
 
 \lstset{ 
-  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
-  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
-  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
-  breaklines=true,                 % sets automatic line breaking
-  commentstyle=\color{mygreen},    % comment style  
+  commentstyle=\color{greenm}, 
   firstnumber=0, 
   numbers=left,               
   frame=single,
-  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
-  language=C,                      % the language of the code                  
-  numbersep=5pt,                   % how far the line-numbers are from the code
-  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
-  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
-  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
-  showstringspaces=false,          % underline spaces within strings only
-  showtabs=false,                  % show tabs within strings adding particular underscores
-  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
-  stringstyle=\color{mymauve},     % string literal style
-  tabsize=2,	                   % sets default tabsize to 2 spaces
-  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+  language=C,                                       
+  showstringspaces=false
 }
 
 \begin{document}
 \subsection{Implémentation de l'algorithme de Gauss en passant par le système d'équations linéaires}
 \subsubsection{Code source}
-Voici le code source de mon implémentation de l'algorithme de Gauss sans utiliser la matrice augmentée, c'est-à-dire en travaillant directement avec le système d'équations linéaires Ax=B.\\
-\begin{lstlisting}[language=C,inputencoding=utf8]
+Voici mon implémentation de l'algorithme de Gauss, qui n'utilise pas la matrice augmentée. En effet, l'algorithme travaille directement avec le système d'équations linéaires Ax=B.\\
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{6}{8}\selectfont]
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -156,21 +139,29 @@ void resolution(float** matA, float** matb, float** matx, int size){
 int main(){
 
 	//A Matrix
-	int rowA=3;
-	int columnA=3;
+	int rowA;
+	int columnA;
+	printf("\nRow count of matrix A : ");
+	scanf("%d", &rowA);
+	printf("\nColumn count of matrix A : ");
+	scanf("%d", &columnA);
+
 	float** Amatrix=createMatrix(rowA, columnA);
 	completeMatrix(Amatrix, rowA, columnA);
-	puts("\n		A Matrix \n");
+	puts("\n		A matrix \n");
 	printMatrix(Amatrix, rowA, columnA);
 	
 	//B Matrix
 	float** Bmatrix=createMatrix(rowA, 1);
 	generateB(Amatrix, Bmatrix, rowA, columnA);
-	puts("\n		B Matrix \n");
+	puts("\n		B matrix \n");
 	printMatrix(Bmatrix, rowA, 1);
 	
+	//X Matrix
+	float** Xmatrix=createMatrix(rowA, 1);
+	
 	//Matrix Triangularization
-	puts("\n		Triangularization \n");
+	puts("\n		TRIANGULARIZATION \n");
 	gauss(Amatrix, Bmatrix, rowA);
 	puts("\n		A Matrix \n");
 	printMatrix(Amatrix, rowA, columnA);
@@ -178,10 +169,9 @@ int main(){
 	printMatrix(Bmatrix, rowA, 1);
 	
 	//Solve the system
-	float** Xmatrix=createMatrix(rowA, 1);
-	puts("\n		Solving \n");
+	puts("\n		SOLVING \n");
 	resolution(Amatrix, Bmatrix, Xmatrix, rowA);
-	puts("\n		Solution Vector x \n");
+	puts("\n		SOLUTION VECTOR X \n");
 	printMatrix(Xmatrix, rowA, 1);
 	
 	//Free
@@ -192,8 +182,7 @@ int main(){
 }
 \end{lstlisting}
 
-\subsubsection{Commentaires du code}
-\subsubsection{Fonctions usuelles de manipulation de matrices}\label{fonctusu}
+\subsubsection{Commentaires sur les fonctions usuelles de manipulation de matrices}\label{fonctusu}
 Ce code implémente diverses fonctions pour travailler avec des matrices à coefficients en nombre flottants.\\
 \begin{itemize}
 \item La fonction \textit{\textbf{createMatrix}} alloue dynamiquement de la mémoire pour créer une matrice de nombres flottants avec un nombre spécifié de lignes et de colonnes.
@@ -203,16 +192,253 @@ Ce code implémente diverses fonctions pour travailler avec des matrices à coef
 \item La fonction \textit{\textbf{generateB}} génère un vecteur colonne $B$ en fonction de la somme des éléments de chaque ligne de la matrice $A$.
 \end{itemize}
 
-\subsubsection{Fonctions résolvant notre système linéaire $Ax=B$ à l'aide de l'algorithme de Gauss}
+\subsubsection{Commentaires sur les fonctions résolvant notre système linéaire $Ax=B$ à l'aide de l'algorithme de Gauss}
 Dans le cadre de notre résolution de systèmes d'équations linéaires, deux fonctions jouent des rôles clefs dans ce code : la fonction \textit{\textbf{gauss}} et la fonction \textit{\textbf{resolution}}.\\
 
 \begin{itemize}
-\item La fonction \textit{\textbf{gauss}} joue un rôle important dans la préparation de la résolution de notre système d'équations linéaires. En effectuant l'élimination de Gauss sur la matrice $A$, elle transforme cette matrice en une forme triangulaire supérieure. Cela signifie que les éléments sous la diagonale principale de la matrice deviennent tous des zéros, simplifiant ainsi la résolution du système. De plus, la fonction met également à jour la matrice $B$ en conséquence, garantissant que notre système $Ax=B$ reste équilibré.\\
+\item La fonction \textit{\textbf{gauss}} joue un rôle important dans la préparation de la résolution de notre système d'équations linéaires. En effectuant l'élimination de Gauss sur la matrice $A$, elle la transforme en une matrice triangulaire supérieure. Cela signifie que les éléments sous la diagonale principale de la matrice deviennent tous des zéros, simplifiant ainsi la résolution du système. De plus, la fonction met également à jour la matrice $B$ en conséquence, garantissant que notre système $Ax=B$ reste équilibré.\\
 
 \item La fonction \textit{\textbf{resolution}}, quant à elle, prend en charge la résolution effective du système linéaire une fois que la matrice $A$ a été triangulée par la fonction \textbf{gauss}. Elle utilise la méthode de substitution pour calculer la solution et stocke le résultat dans le vecteur $X$. Cette étape finale permet d'obtenir les valeurs des variables inconnues du système, fournissant ainsi la solution recherchée pour le problème initial.\\
 \end{itemize}
 
 
-En combinant ces deux fonctions avec celles citées dans la sous-section \ref{fonctusu}, le code réalise un processus complet de résolution de systèmes d'équations linéaires de manière efficace et précise.\\
-\subsubsection{Exécution du code sur quelques matrices}
+En combinant ces deux fonctions avec celles citées dans la sous-section \ref{fonctusu}, le code réalise un processus complet de résolution de systèmes d'équations linéaires de manière efficace et précise (aux erreurs d'arrondies près).\\
+
+\subsubsection{Entrées utilisateur}
+
+En premier lieu dans notre programme, nous avons besoin de spécifier le système $Ax=B$ à l'ordinateur. 
+Pour ce faire, nous allons dans l'ordre :
+\begin{enumerate}
+\item Allouer une matrice $A$ en mémoire. Cette matrice verra sa taille définie par la première entrée utilisateur du programme (nous demanderons consécutivement le nombre de lignes, puis le nombre de colonnes de la matrice).
+\item Définir les coefficients de la matrice $A$. Il s'agira de la deuxième entrée utilisateur de notre programme. \\
+Par définition de notre fonction \textit{\textbf{completeMatrix}}, nous remplirons la matrice dans l'ordre suivant:\\
+$a_{1,1}, a_{1,2}, ..., a_{1,n}, \text{   puis   } a_{2,1}, ... a_{2,n}, \text{   jusque   }  a_{n,1}, ..., a_{n,n}$
+\item Allouer une matrice $B$ en mémoire. À noter que la taille de $B$ est définie automatiquement en fonction de la taille de $A$. Nous avons $A\in \mathcal{M}_{n,p} \Rightarrow B\in \mathcal{M}_{n,1}$.
+\item Définir les coefficients de la matrice $B$. Chaque coefficient prendra la valeur de la somme des éléments de la ligne respective de la matrice $A$.\\
+Nous avons donc:\\ $ \text{Soient } A\in \mathcal{M}_{n,p} \text{ et } B\in \mathcal{M}_{n,1}  , \forall i \in \{1,n\}  , b_{i,1}=\sum_{j=1}^{p} a_{i,p}$.\\
+\item Allouer une matrice $X$ en mémoire. Cette matrice aura la même taille que la matrice $B$. Ces coefficients ne seront pas définis pour le moment.
+\end{enumerate}
+
+En guise d'exemple, le système matriciel $AX=B$ suivant:
+
+\begin{equation}
+\begin{pmatrix}
+3 & 0 & 4\\
+7 & 4 & 2 \\
+-1 & 1 & 2
+\end{pmatrix} 
+\begin{pmatrix}
+x_1\\
+x_2\\
+x_3\\
+\end{pmatrix}
+=
+\begin{pmatrix}
+7 \\
+13 \\
+2
+\end{pmatrix}
+\end{equation}
+\\
+
+
+est représenté par l'entrée utilisateur:
+\begin{lstlisting}[caption=User Input, basicstyle=\fontsize{6}{8}\selectfont]
+Row count of matrix A : 3
+
+Column count of matrix A : 3
+
+		FILL IN THE VALUE OF MATRIX A 
+
+Value for a_1,1:   3
+Value for a_1,2:   0
+Value for a_1,3:   4
+Value for a_2,1:   7
+Value for a_2,2:   4
+Value for a_2,3:   2
+Value for a_3,1:   -1
+Value for a_3,2:   1
+Value for a_3,3:   2
+
+\end{lstlisting}
+Une fois toutes les matrices initialisées et complétées, nous pouvons attaquer la résolution du système par la triangularisation du système. Ceci fait, nous résolverons le système obtenu pour obtenir notre vecteur $X$ solution.\\
+\subsubsection{Affichage Console}
+Dès lors le système $AX=B$ connu par l'ordinateur, ce dernier peut retrouver les valeurs de la matrice $X$. Voici l'affichage produit par notre programme en console: \\
+\begin{lstlisting}[caption=Console Display of the Gauss elimination for the AX=B system mentioned above, basicstyle=\fontsize{6}{8}\selectfont]
+		A matrix 
+
+3.000000   0.000000   4.000000   
+7.000000   4.000000   2.000000   
+-1.000000   1.000000   2.000000   
+
+		B matrix 
+
+7.000000   
+13.000000   
+2.000000   
+
+		TRIANGULARIZATION 
+		A Matrix 
+
+3.000000   0.000000   4.000000   
+0.000000   4.000000   -7.333333   
+0.000000   0.000000   5.166667   
+
+		B Matrix 
+
+7.000000   
+-3.333332   
+5.166667   
+
+		SOLVING 
+		SOLUTION VECTOR X 
+
+1.000000   
+1.000000   
+1.000000   
+
+\end{lstlisting}
+Il est à repérer que le programme affiche dans cet ordre: \\
+\begin{itemize}
+\item La Matrice $A$ 
+\item La Matrice $B$
+\item La Matrice $A$ une fois triangulée supérieure
+\item La Matrice $B$ une fois mise à jour en conséquence pour que le système reste équilibré
+\item La Matrice $X$ solution du système
+\end{itemize}
+
+\textit{\underline{Remarque}: le temps d'exécution de ce programme a été de 0.000237 secondes}
+\subsubsection{Exemples d'exécutions}
+
+Soient les matrices suivantes données dans le TP:\\
+
+$A_2 = \begin{pmatrix}
+-3 & 3 & -6 \\
+-4 & 7 &  8 \\
+5 & 7 & -9 \\
+\end{pmatrix}
+$
+,
+$A_4 = \begin{pmatrix}
+7 & 6 & 9 \\
+4 & 5 &  -4\\
+-7 & -3 & 8 \\
+\end{pmatrix}
+$,
+$A_6 = \begin{pmatrix}
+-3 & 3 & -6 \\
+-4 & 7 &  8 \\
+5 & 7 & -9 \\
+\end{pmatrix}
+$
+\vspace{12pt}\\
+On obtient respectivement les résultats suivants:
+\\
+\begin{lstlisting}[caption={$A_2X=B$} results, basicstyle=\fontsize{4}{6}\selectfont]
+  		A matrix 
+
+-3.000000   3.000000   -6.000000   
+-4.000000   7.000000   8.000000   
+5.000000   7.000000   -9.000000   
+
+		B matrix 
+
+-6.000000   
+11.000000   
+3.000000   
+
+		TRIANGULARIZATION
+		A Matrix 
+
+-3.000000   3.000000   -6.000000   
+0.000000   3.000000   16.000000   
+0.000000   0.000000   -83.000000   
+
+		B Matrix 
+
+-6.000000   
+19.000000   
+-83.000000   
+
+		SOLVING 
+		SOLUTION VECTOR X 
+
+1.000000   
+1.000000   
+1.000000   
+
+Temps d'execution : 0.000250 secondes
+\end{lstlisting}
+\begin{lstlisting}[caption={$A_4X=B$} results, basicstyle=\fontsize{4}{6}\selectfont]
+		A matrix 
+
+7.000000   6.000000   9.000000   
+4.000000   5.000000   -4.000000   
+-7.000000   -3.000000   8.000000   
+
+		B matrix 
+
+22.000000   
+5.000000   
+-2.000000   
+
+		TRIANGULARIZATION 
+		A Matrix 
+
+7.000000   6.000000   9.000000   
+0.000000   1.571428   -9.142858   
+0.000000   0.000000   34.454552   
+
+		B Matrix 
+
+22.000000   
+-7.571429   
+34.454548   
+
+		SOLVING 
+		SOLUTION VECTOR X 
+
+1.000001   
+0.999999   
+1.000000   
+
+Temps d'execution : 0.000231 secondes
+\end{lstlisting}
+\begin{lstlisting}[caption={$A_6X=B$} results, basicstyle=\fontsize{4}{6}\selectfont]
+		A matrix 
+
+-3.000000   3.000000   -6.000000   
+-4.000000   7.000000   8.000000   
+5.000000   7.000000   -9.000000   
+
+		B matrix 
+
+-6.000000   
+11.000000   
+3.000000   
+
+		TRIANGULARIZATION 
+		A Matrix 
+
+-3.000000   3.000000   -6.000000   
+0.000000   3.000000   16.000000   
+0.000000   0.000000   -83.000000   
+
+		B Matrix 
+
+-6.000000   
+19.000000   
+-83.000000   
+
+		SOLVING 
+		SOLUTION VECTOR X 
+
+1.000000   
+1.000000   
+1.000000   
+
+Temps d'execution : 0.000246 secondes
+\end{lstlisting}
+
+\textbf{On remarquera} que sur le calcul de $A_4$, on tombe sur des valeur extrêmement proche de $1$. Ceci est provoqué à cause des erreurs d'arrondis provoqués par l'encodage des nombres flottants.
 \end{document}      
