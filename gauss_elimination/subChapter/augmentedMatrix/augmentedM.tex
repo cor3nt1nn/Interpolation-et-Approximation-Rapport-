@@ -156,7 +156,7 @@ int main() {
 \subsection{Commentaires du code}
 Mon implémentation utilise strictement l'algorithme de Gauss rappelé précédemment avec seulement quelques changements d'indices puisque au lieu de travailler sur une matrice carrée et un vecteur colonne, mon programme utilise une matrice augmentée ayant $m$ lignes et $m+1$ colonnes, $m\in \mathbb{N}^*$. \\
 \textbf{Détail des fonctions non conventionnelles:}\\
-\textit{Comme mentioné précédemment, je ne détaillerai pas les fonction \textif{gauss()} et \text{findSolutions()} puisque ces fonctions permettent strictement que d'une part d'implémenter l'algorithme de Gauss et d'autre part à "remonter" la matrice échelonnée afin de récupérer les valeurs des inconnus}. \\
+\textit{Comme mentioné précédemment, je ne détaillerai pas les fonction \textit{gauss()} et \textit{findSolutions()} puisque ces fonctions permettent strictement que d'une part d'implémenter l'algorithme de Gauss et d'autre part à "remonter" la matrice échelonnée afin de récupérer les valeurs des inconnus}. \\
 -\textbf{float **AugmentedMatrix(float **M1, float **M2, int m, int n):} cette fonction permet de créer une matrice $A \in \mathcal{M}_{m,m+1}$ à partir de la concaténation de $M1 \in \mathcal{M}_{mm}$ et $M2 \in \mathcal{M}_{m,1}$. \\
 Soient $a_{ij}$ les coefficients peuplant $A$, $b_{ij}$ les coefficients peuplant $M1$ et $c_{i0}$ les coefficients peuplant $M2$. \\
 On obtient alors $a_{ij} = b_{ij} \forall i \in \mathbb{N}_{m}, \forall j \in \mathbb{N}_{m}$ et $a_{ij} = c_{i0}$ si $j = m+1$. \\
