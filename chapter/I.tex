@@ -1,23 +1,6 @@
-\documentclass{report}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{mathtools}
-\usepackage{amssymb}
-\usepackage{hyperref}
-\usepackage{float}
-\usepackage{amsthm}
-\usepackage{listings}
-\usepackage{geometry}
-\usepackage{setspace}
-\usepackage{graphicx}
-\usepackage{fancyhdr}
-\usepackage{subcaption}
-\usepackage{cleveref}
-
-\begin{document}
-\section{Résolution de systèmes linéaires par des Méthodes Directes}
+\chapter{Résolution de systèmes linéaires par des Méthodes Directes: Méthode de Gauss}
 Dans le cadre de ce premier TP, nous devions implémenter l'algorithme du \emph{Pivot de Gauss} en utilisant le langage de programmation C.
-\subsection{Détail de l'algorithme}
+\section{Détail de l'algorithme}
 Soit $A$ une matrice $ \in \mathcal{M}_{m,m}\,m \in \mathbb{N}$ et $b \in \mathcal{M}_{m,1}$ . \\
 L'algorithme de Gauss se décrit ainsi: \\ \\
 \begin{lstlisting}[mathescape=true]
@@ -46,9 +29,9 @@ $ x_n = \frac{b_n}{a_{m,m}}$ \\
 $ \forall i = n-1, \ldots, 1$, $x_i = \frac{1}{a_{ii}}\left( b_i-\sum\limits_{j=1+i}^n a_{ij}x_j \right)$
 \end{Large} \\ \\
 \normalsize
-La complexité temporelle de cet algorithme est cubique soit $O(n^3)$ avec une compléxité exacte de $\frac{2n^3}{3}$. \\
+La complexité temporelle de cet algorithme est cubique soit $O(n^3)$ avec une complexité exacte de $\frac{2n^3}{3}$. \\
 Pour l'implémentation de cet algorithme, nous allons présenter deux façons de le conceptualiser avec une comparaison algorithmique des deux programmes. \\
-\subsection{Exemples}
+\section{Exemples}
 Soit $A \in \mathcal{M}_{m,m}$ et $B \in \mathcal{M}_{m,1}$ et $x$ la matrice des inconnues. \\
 Considérons alors le Système suivant $Ax=b$.\\
 Ce système peut-être représenter sous la forme d'une matrice augmentée $M$ tel que:\\
@@ -69,11 +52,10 @@ M =  \begin{pmatrix}
 \vdots & \vdots & \vdots& \ddots& \vdots &\bigm| &  \vdots \\
 0 & \ldots &0 &\ldots &1&\bigm|& b_{m}^{'}
 \end{pmatrix}
-$
+$  \\ \\
 Une fois que tout les pivots sont placés, il suffira de reconstituer le système et de le remonter afin de déterminer les inconnues comme suit:
-
 Soit $A^{'}=  \begin{pmatrix}
-1& a_{12}& a_{13} &\ldots & a_{1m} \\
+1& a_{12}^{'}& a_{13}^{'} &\ldots & a_{1m}^{,} \\
 0 & 1 & a_{23}^{'}&  \ldots &a_{2m}^{'} \\
 0 & 0 & 1 & \ldots &\vdots\\
 \vdots & \vdots & \vdots& \ddots& \vdots \\
@@ -89,8 +71,8 @@ b_{3}^{'} \\
 \end{pmatrix}
 $
 \\
-alors pour $A^{'}x = b$ on a donc $x_i = \frac{1}{a_{ii}}\left( b_i-\sum\limits_{j=1+i}^n a_{ij}x_j \right) \forall i = n-1, \ldots, 1$.
+alors pour $A^{'}x = b$ on a donc $x_i = \frac{1}{a_{ii}}\left( b_i-\sum\limits_{j=1+i}^n a_{ij}x_j \right) \forall i = n-1, \ldots, 1$. \\
+\textit{Nous remarquerons que l'implémentation du pivot de Gauss ne necéssitera pas de mettre nos pivot à $1$}
 \subsection{Implémentation du pivot de Gauss sans matrice Augmentée}
 % \import{le fichier}
-\subsection{Implementation du pivot de Gauss avec matrice Augmentée}
-\end{document}
+\input{gauss_elimination/subChapter/augmentedMatrix/augmentedM.tex}
