@@ -156,18 +156,18 @@ int main() {
 \subsection{Commentaires du code}
 Mon implémentation utilise strictement l'algorithme de Gauss rappelé précédemment avec seulement quelques changements d'indices puisque au lieu de travailler sur une matrice carrée et un vecteur colonne, mon programme utilise une matrice augmentée ayant $m$ lignes et $m+1$ colonnes, $m\in \mathbb{N}^*$. \\
 \textbf{Détail des fonctions non conventionnelles:}\\
-\textit{Comme mentioné précédemment, je ne détaillerai pas les fonction gauss() et findSolutions() puisque ces fonctions permettent strictement que d'une part d'implémenter l'algorithme de Gauss et d'autre part à "remonter" la matrice échelonnée afin de récupérer les valeurs des inconnus}. \\
+\textit{Comme mentioné précédemment, je ne détaillerai pas les fonction \textif{gauss()} et \text{findSolutions()} puisque ces fonctions permettent strictement que d'une part d'implémenter l'algorithme de Gauss et d'autre part à "remonter" la matrice échelonnée afin de récupérer les valeurs des inconnus}. \\
 -\textbf{float **AugmentedMatrix(float **M1, float **M2, int m, int n):} cette fonction permet de créer une matrice $A \in \mathcal{M}_{m,m+1}$ à partir de la concaténation de $M1 \in \mathcal{M}_{mm}$ et $M2 \in \mathcal{M}_{m,1}$. \\
 Soient $a_{ij}$ les coefficients peuplant $A$, $b_{ij}$ les coefficients peuplant $M1$ et $c_{i0}$ les coefficients peuplant $M2$. \\
 On obtient alors $a_{ij} = b_{ij} \forall i \in \mathbb{N}_{m}, \forall j \in \mathbb{N}_{m}$ et $a_{ij} = c_{i0}$ si $j = m+1$. \\
-Cette fonction renvoie alors $A$, la matrice de flottants créee dynamiquement. \\
+Cette fonction renvoie alors $A$, la matrice de flottants créée dynamiquement. \\
 Les fonctions \textit{fillM()}, \textit{printMatrix()}, \textit{freeAll()} et \textit{multiplication()} et \textit{allocate()} sont quatre fonctions utilitaires qui permettent respectivement: de remplir une matrice, d'afficher convenablement une matrice, de libérer les matrices en mémoires, de définir la multiplication matricielle et enfin d'allouer de la mémoire pour déclarer les matrices (avec quelques légères sécurités permettant d'être sûr que les matrices sont bien instanciées convenablement). 
 \subsection{Inputs / Outputs}
-Mon programme demande d'abord 4 entiers $m,p,n,q$ qui correspondent aux dimensions de la première matrice $A \in \mathcal{M}_{mp}$ et de la seconde matrice $X \in \mathcal{M}_{nq}$. Le but étant de résoudre le système $AX=b$, nous initialiserons $X$ à $1$. Ce choix de valeur permettra de controller la validité du programme, ainsi si à la fin du programme $\forall x_i \neq 1, \forall i \in \mathbb{N}_{n}$, on pourra affirmer que le programme est faux.  \\
+Mon programme demande d'abord 4 entiers $m,p,n,q$ qui correspondent aux dimensions de la première matrice $A \in \mathcal{M}_{mp}$ et de la seconde matrice $X \in \mathcal{M}_{nq}$. Le but étant de résoudre le système $AX=b$, nous initialiserons $X$ à $1$. Ce choix de valeur permettra de contrôler la validité du programme, ainsi si à la fin de ce dernier, si $\forall x_i \neq 1, \forall i \in \mathbb{N}_{n}$, on pourra affirmer que le programme est faux.  \\
 Sur le $m\times p$ prochaines lignes, le programme demande les coefficients de $A$. \\
-Sur les $n \times q$ prochaines lignes, le programme demandera les coefficient du vecteur colonne $X$, que l'utilisateur initialisera à $1$. \\
+Sur les $n \times q$ prochaines lignes, le programme demandera les coefficients du vecteur colonne $X$, que l'utilisateur initialisera à $1$. \\
 On peut alors automatiser les entrées en utilisant des fichiers. \\
-Ainsi la matrice:
+Ainsi les matrices:
 $ M = \begin{pmatrix}
 3 & 0 & 4\\
 7 & 4 & 2 \\
@@ -217,7 +217,7 @@ RUNTIME: 0.000002 seconds
 On remarquera que le programme affiche dans cet ordre: \\
 - \textbf{La Matrice A} \\
 - \textbf{La Matrice X} \\
-- \textbf{La Matrice B trouvé avec les valeur de X} \\
+- \textbf{La Matrice B trouvée avec les valeur de X} \\
 - \textbf{La Matrice augmentée en triangle supérieur} \\
 - \textbf{Les solutions} \\
 - \textbf{Un timer permettant de contrôler le temps d'exécution approximatif de mon programme} 
@@ -243,7 +243,7 @@ $A_6 = \begin{pmatrix}
 \end{pmatrix}
 $
 \\
-On obtient respectivement ces résulats:
+On obtient respectivement ces résultats:
 \\
 \begin{lstlisting}[caption=Matrix 2 results]
 PRINTING MATRIX FROM: 0x55f604fb32c0 LOCATION :
@@ -314,4 +314,4 @@ x1 = 1.000000
 x2 = 1.000000
 RUNTIME: 0.000002 seconds                       
 \end{lstlisting}
-\textbf{On remarquera} que sur le calcul de $A_4$, on tombe sur des valeur extrêmement proche de $1$. Ceci est provoqué à cause des erreurs d'arrondis provoqués par l'encodage des nombres flottants.  
+\textbf{On remarquera} que sur le calcul de $A_4$, on obtient sur des valeurs extrêmement proches de $1$. Ceci est provoqué par des erreurs d'arrondis issus par l'encodage des nombres flottants.  
