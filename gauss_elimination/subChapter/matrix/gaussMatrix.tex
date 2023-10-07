@@ -7,7 +7,7 @@
 }
 \section{Implémentation de l'algorithme de Gauss en passant par le système d'équations linéaires}
 \subsection{Code source}
-Voici mon implémentation de l'algorithme de Gauss, qui n'utilise pas la matrice augmentée. En effet, l'algorithme travaille directement avec le système d'équations linéaires Ax=B.\\
+Voici mon implémentation de l'algorithme de Gauss, qui ne recourt à l'utilisation de la matrice augmentée. En effet, le programme fonctionne directement avec le système d'équations linéaires Ax=B.\\
 \begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont]
 #include <stdio.h>
 #include <string.h>
@@ -171,7 +171,7 @@ Ce code implémente diverses fonctions pour travailler avec des matrices à coef
 \end{itemize}
 
 \subsubsection{Fonctions résolvant notre système linéaire $Ax=B$ à l'aide de l'algorithme de Gauss}
-Dans le cadre de notre résolution de systèmes d'équations linéaires, deux fonctions jouent des rôles clefs dans ce code : la fonction \textit{\textbf{gauss}} et la fonction \textit{\textbf{resolution}}.\\
+Dans le cadre de notre résolution de systèmes d'équations linéaires, deux fonctions jouent un rôle clef dans ce code : la fonction \textit{\textbf{gauss}} et la fonction \textit{\textbf{resolution}}.\\
 
 \begin{itemize}
 \item La fonction \textit{\textbf{gauss}} joue un rôle important dans la préparation de la résolution de notre système d'équations linéaires. En effectuant l'élimination de Gauss sur la matrice $A$, elle la transforme en une matrice triangulaire supérieure. Cela signifie que les éléments sous la diagonale principale de la matrice deviennent tous des zéros, simplifiant ainsi la résolution du système. De plus, la fonction met également à jour la matrice $B$ en conséquence, garantissant que notre système $Ax=B$ reste équilibré.\\
@@ -180,7 +180,7 @@ Dans le cadre de notre résolution de systèmes d'équations linéaires, deux fo
 \end{itemize}
 
 
-En combinant ces deux fonctions avec celles citées dans la sous-section \ref{fonctusu}, le code réalise un processus complet de résolution de systèmes d'équations linéaires de manière efficace et précise (aux erreurs d'arrondies près).\\
+En combinant ces deux fonctions avec celles sus-citées en \ref{fonctusu}, le code réalise un processus complet de résolution de systèmes d'équations linéaires de manière efficace et précise (aux erreurs d'arrondies près).\\
 \subsection{Interaction Utilisateur/Console}
 \subsubsection{Entrées utilisateur}
 
@@ -278,15 +278,15 @@ Dès lors le système $AX=B$ connu par l'ordinateur, ce dernier peut retrouver l
 \end{lstlisting}
 Il est à repérer que le programme affiche dans cet ordre: \\
 \begin{itemize}
-\item La Matrice $A$ 
-\item La Matrice $B$
-\item La Matrice $A$ une fois triangulée supérieure
-\item La Matrice $B$ une fois mise à jour en conséquence pour que le système reste équilibré
-\item La Matrice $X$ solution du système
+\item La \textbf{Matrice $A$}
+\item La \textbf{Matrice $B$}
+\item La \textbf{Matrice $A$} une fois triangulée supérieure
+\item La \textbf{Matrice $B$} une fois mise à jour en conséquence pour que le système reste équilibré
+\item La \textbf{Matrice $X$} solution du système
 \end{itemize}
 
 \textit{\underline{Remarque}: le temps d'exécution de ce programme a été de 0.000237 secondes}
-\subsection{Exemples d'exécutions}
+\subsection{Exemples d'exécution}
 
 Soient les matrices suivantes données dans le TP:\\
 
@@ -418,4 +418,4 @@ Temps d'execution : 0.000231 secondes
 Temps d'execution : 0.000246 secondes
 \end{lstlisting}
 
-\textbf{On remarquera} que sur le calcul de $A_4$, on tombe sur des valeur extrêmement proche de $1$. Ceci est provoqué à cause des erreurs d'arrondis provoqués par l'encodage des nombres flottants.     
+\textbf{Nous remarquerons} que sur le calcul de $A_4$, nous tombons sur des valeurs extrêmement proches de $1$. Ceci est provoqué à cause des erreurs d'arrondis provoquées par l'encodage des nombres flottants.     
