@@ -2,7 +2,76 @@
 \subsection{Code source}
 Voici le code source de mon implémentation du pivot de Gauss via le passage par la matrice augmentée.\\
 C'est-à-dire que dans mon implémentation, on fera usage de la concaténation des matrices.
-\begin{lstlisting}[language=C]
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont]
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+/*
+ * PRINT MATRIX WITH RIGHT FORMAT
+ */
+void printMatrix(float **matrix, int m, int p) {
+  printf("PRINTING MATRIX FROM: %p LOCATION :\n", matrix);
+  for (int i = 0; i < m; i++) {
+    for (int j = 0; j < p; j++) {
+      (j <= p - 2) ? printf("%f ", matrix[i][j]) : printf("%f", matrix[i][j]);
+    }
+    puts("");
+  }
+}
+/*
+ * ALLOCATE MEMORY FOR MATRIX
+ */
+float **allocate(int m, int n) {
+  float **T = malloc(m * sizeof *T);
+  for (int i = 0; i < m; i++) {
+    T[i] = malloc(n * sizeof *T[i]);
+    if (T[i] == NULL) {
+      for (int j = 0; j < i; j++) {
+        free(T[i]);
+      }
+      free(T);
+      puts("ALLOCATION ERROR");
+      exit(-1);
+    }
+  }
+  return T;
+}
+/*
+ * FILL MATRIX BY USER INPUT
+ */
+void fillM(int m, int p, float **T) {
+  for (int i = 0; i < m; i++) {
+    for (int j = 0; j < p; j++) {
+      T[i][j] = 0;
+      printf("Enter coefficient for %p[%d][%d]", T, i, j);
+      scanf("%f", &T[i][j]);
+    }
+  }
+}
+/*
+ * FREE MATRIX
+ */
+void freeAll(float **T, int m) {
+  for (int i = 0; i < m; i++) {
+    free(T[i]);
+  }
+  free(T);
+}
+/*
+ * IMPLEMENTATION OF '.' OPERATOR FOR MATRIX
+ */
+float **multiplication(float **M1, float **M2, int m, int q) {
+  float **R = allocate(m, q);
+  for (int i = 0; i < m; i++) {
+    for (int j = 0; j < q; j++) {
+      for (int k = 0; k < q; k++) {
+        R[i][j] += M1[i][k] * M2[k][j];
+      }
+    }
+  }
+  return R;
+}
 /*
  * BUILD AUGMENTED MATRIX
  */
@@ -47,19 +116,55 @@ float *findSolutions(float **A, int m) {
   }
   return S;
 }
+int main() {
+  int m, n, p, q;
+  float **P, **Q, **B, **A, *S;
+  clock_t start, end;
+  double execution;
+  puts("Nombre de ligne suivit du nombre de colonne pour la matrice 1:");
+  scanf("%d%d", &m, &p);
+  puts("Nombre de ligne suivit du nombre de colonne pour la matrice 2:");
+  scanf("%d%d", &n, &q);
+  start = clock();
+  P = allocate(m, p);
+  Q = allocate(n, q);
+  fillM(m, p, P);
+  fillM(n, q, Q);
+  printMatrix(P, m, p);
+  printMatrix(Q, n, q);
+  B = multiplication(P, Q, m, n);
+  printMatrix(B, m, q);
+  A = AugmentedMatrix(P, B, m, p);
+  gauss(A, m, p);
+  printMatrix(A, m, m + 1);
+  S = findSolutions(A, m);
+  puts("SOLUTIONS");
+  for (int i = 0; i < m; i++)
+    printf("x%d = %f\n", i, S[i]);
+  freeAll(P, m);
+  freeAll(Q, n);
+  freeAll(B, m);
+  freeAll(A, m);
+  free(S);
+  end = clock();
+  execution = ((double)(end - start) / CLOCKS_PER_SEC);
+  printf("RUNTIME: %f seconds", execution / 10);
+  return 0;
+}
+
 \end{lstlisting}
 \subsection{Commentaires du code}
 Mon implémentation utilise strictement l'algorithme de Gauss rappelé précédemment avec seulement quelques changements d'indices puisque au lieu de travailler sur une matrice carrée et un vecteur colonne, mon programme utilise une matrice augmentée ayant $m$ lignes et $m+1$ colonnes, $m\in \mathbb{N}^*$. \\
 \textbf{Détail des fonctions non conventionnelles:}\\
-\textit{Comme mentionné précédemment, je ne détaillerai pas les fonctions \textit{gauss()} et \textit{findSolutions()} puisque ces fonctions permettent seulement d'une part d'implémenter l'algorithme de Gauss et d'autre part à "remonter" la matrice échelonnée afin de récupérer les valeurs des inconnus}. \\
+\textit{Comme mentioné précédemment, je ne détaillerai pas les fonction \textit{gauss()} et \textit{findSolutions()} puisque ces fonctions permettent strictement que d'une part d'implémenter l'algorithme de Gauss et d'autre part à "remonter" la matrice échelonnée afin de récupérer les valeurs des inconnus}. \\
 -\textbf{float **AugmentedMatrix(float **M1, float **M2, int m, int n):} cette fonction permet de créer une matrice $A \in \mathcal{M}_{m,m+1}$ à partir de la concaténation de $M1 \in \mathcal{M}_{mm}$ et $M2 \in \mathcal{M}_{m,1}$. \\
 Soient $a_{ij}$ les coefficients peuplant $A$, $b_{ij}$ les coefficients peuplant $M1$ et $c_{i0}$ les coefficients peuplant $M2$. \\
 On obtient alors $a_{ij} = b_{ij} \forall i \in \mathbb{N}_{m}, \forall j \in \mathbb{N}_{m}$ et $a_{ij} = c_{i0}$ si $j = m+1$. \\
 Cette fonction renvoie alors $A$, la matrice de flottants créée dynamiquement. \\
-Les fonctions \textit{fillM()}, \textit{printMatrix()}, \textit{freeAll()} et \textit{multiplication()} et \textit{allocate()} sont quatre fonctions utilitaires qui permettent respectivement: de remplir une matrice, d'afficher convenablement une matrice, de libérer les matrices en mémoire, de définir la multiplication matricielle et enfin d'allouer de la mémoire pour déclarer les matrices (avec quelques légères sécurités permettant d'être sûr que les matrices sont bien instanciées convenablement). 
+Les fonctions \textit{fillM()}, \textit{printMatrix()}, \textit{freeAll()} et \textit{multiplication()} et \textit{allocate()} sont quatre fonctions utilitaires qui permettent respectivement: de remplir une matrice, d'afficher convenablement une matrice, de libérer les matrices en mémoires, de définir la multiplication matricielle et enfin d'allouer de la mémoire pour déclarer les matrices (avec quelques légères sécurités permettant d'être sûr que les matrices sont bien instanciées convenablement). 
 \subsection{Inputs / Outputs}
-Mon programme demande d'abord 4 entiers $m,p,n,q$ qui correspondent aux dimensions de la première matrice $A \in \mathcal{M}_{mp}$ et de la seconde matrice $X \in \mathcal{M}_{nq}$. Le but étant de résoudre le système $AX=b$, nous initialiserons $X$ à $1$. Ce choix de valeur permettra de contrôler la validité du programme, ainsi à la fin de ce dernier si $\forall x_i \neq 1, \forall i \in \mathbb{N}_{n}$, on pourra affirmer que le programme est faux.\vspace{8pt}\\
-Sur les $m\times p$ prochaines lignes, le programme demande les coefficients de $A$. \\
+Mon programme demande d'abord 4 entiers $m,p,n,q$ qui correspondent aux dimensions de la première matrice $A \in \mathcal{M}_{mp}$ et de la seconde matrice $X \in \mathcal{M}_{nq}$. Le but étant de résoudre le système $AX=b$, nous initialiserons $X$ à $1$. Ce choix de valeur permettra de contrôler la validité du programme, ainsi si à la fin de ce dernier, si $\forall x_i \neq 1, \forall i \in \mathbb{N}_{n}$, on pourra affirmer que le programme est faux.  \\
+Sur le $m\times p$ prochaines lignes, le programme demande les coefficients de $A$. \\
 Sur les $n \times q$ prochaines lignes, le programme demandera les coefficients du vecteur colonne $X$, que l'utilisateur initialisera à $1$. \\
 On peut alors automatiser les entrées en utilisant des fichiers. \\
 Ainsi les matrices:
@@ -75,9 +180,9 @@ $ X = \begin{pmatrix}
 1 \\
 1 \\
 \end{pmatrix}
-$\vspace{6pt}\\
-sont représentés par ce fichier d'entrées: 
-\begin{lstlisting}[caption=input.txt]
+$ \\
+sont représentés par ce fichier d'entrées:
+\begin{lstlisting}[caption=input.txt, basicstyle=\fontsize{8}{10}\selectfont]
 3 3
 3 1 
 3 0 4
@@ -86,7 +191,7 @@ sont représentés par ce fichier d'entrées:
 1 1 1
 \end{lstlisting}
 Pour ce qui est des résultats produits par mon programme, une fois injecté dans un fichier texte, une input "type" ressemble à ceci. \\
-\begin{lstlisting}[caption=Gauss elimination with M and X matrix]
+\begin{lstlisting}[caption=Gauss elimination with M and X matrix, basicstyle=\fontsize{8}{10}\selectfont]
 PRINTING MATRIX FROM: 0x556d938672c0 LOCATION :
 3.000000 0.000000 4.000000
 7.000000 4.000000 2.000000
@@ -140,7 +245,7 @@ $
 \\
 On obtient respectivement ces résultats:
 \\
-\begin{lstlisting}[caption=Matrix 2 results]
+\begin{lstlisting}[caption=Matrix 2 results, basicstyle=\fontsize{8}{10}\selectfont]
 PRINTING MATRIX FROM: 0x55f604fb32c0 LOCATION :
 -3.000000 3.000000 -6.000000
 -4.000000 7.000000 8.000000
@@ -163,7 +268,7 @@ x1 = 1.000000
 x2 = 1.000000
 RUNTIME: 0.000002 seconds   
 \end{lstlisting}
-\begin{lstlisting}[caption=Matrix 4 results]
+\begin{lstlisting}[caption=Matrix 4 results, basicstyle=\fontsize{8}{10}\selectfont]
 PRINTING MATRIX FROM: 0x55f7afd662c0 LOCATION :
 7.000000 6.000000 9.000000
 4.000000 5.000000 -4.000000
@@ -186,7 +291,7 @@ x1 = 0.999999
 x2 = 1.000000
 RUNTIME: 0.000002 seconds  
 \end{lstlisting}
-\begin{lstlisting}[caption=Matrix 6 results]
+\begin{lstlisting}[caption=Matrix 6 results, basicstyle=\fontsize{8}{10}\selectfont]
 PRINTING MATRIX FROM: 0x557fdaa552c0 LOCATION :
 3.000000 -1.000000 0.000000
 0.000000 3.000000 -1.000000
