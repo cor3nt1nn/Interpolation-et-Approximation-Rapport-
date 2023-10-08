@@ -1,8 +1,8 @@
 \chapter{Résolution de systèmes linéaires par des Méthodes Directes: Méthode de Gauss}
 Dans le cadre de ce premier TP, nous devions implémenter l'algorithme du \emph{Pivot de Gauss} en utilisant le langage de programmation C.
 \section{Détail de l'algorithme}
-Soient deux matrices $A \in \mathcal{M}_{m,m} \text{et} b \in \mathcal{M}_{m,1}$ . \\
-L'algorithme de Gauss se décrit ainsi: \\ \\
+Soient deux matrices $A \in \mathcal{M}_{m,m} \text{ et  } b \in \mathcal{M}_{m,1}$ . \\
+L'algorithme de Gauss se décrit ainsi: \\
 \begin{lstlisting}[mathescape=true, frame=single]
 Pour $k = 1,\ldots,n-1$ Faire:
 	Pour $i=k+1,\ldots,n$ Faire:
@@ -22,6 +22,7 @@ FIN Pour $k$
 \end{lstlisting}
 \newpage
 Une fois la matrice échelonnée par cet algorithme, on appliquera la formule suivante pour trouver les solutions du système : \\
+\begin{mdframed}
 \begin{center}
 \begin{large}
 $ x_n = \frac{b_n}{a_{m,m}}$ \\
@@ -33,12 +34,14 @@ et \\
 $ \forall i = n-1, \ldots, 1$, $x_i = \frac{1}{a_{ii}}\left( b_i-\sum\limits_{j=1+i}^n a_{ij}x_j \right)$\\
 \end{large}
 \end{center}
+\end{mdframed}
 La complexité temporelle de cet algorithme est cubique soit $O(n^3)$ avec une complexité exacte de $\frac{2n^3}{3}$. \\
 Pour l'implémentation de cet algorithme, nous allons présenter deux façons de le conceptualiser avec une comparaison algorithmique des deux programmes. \\
-\section{Exemples}
-Soit $A \in \mathcal{M}_{m,m}$ et $B \in \mathcal{M}_{m,1}$ et $x$ la matrice des inconnues. \\
+\section{Le pivot de Gauss en pratique}
+\subsection{De manière générale}
+Soit $A \in \mathcal{M}_{m,m}$ et $B \in \mathcal{M}_{m,1}$ et $x$ la matrice des inconnues.\\
 Considérons alors le système suivant $Ax=b$.\\
-Ce système peut-être représenté sous la forme d'une matrice augmentée $M$ tel que: \vspace{10pt}\\
+Ce système peut être représenté sous la forme d'une matrice augmentée $M$ tel que: \vspace{10pt}\\
 $
 M =  \begin{pmatrix}
 a_{11}& \ldots & a_{1m} &\bigm| & b_{1} \\
@@ -74,10 +77,131 @@ b_{3}^{'} \\
  b_{m}^{'}
 \end{pmatrix}
 $ \\
-alors pour $A^{'}x = b$ on a donc $x_i = \frac{1}{a_{ii}}\left( b_i-\sum\limits_{j=1+i}^n a_{ij}x_j \right), \forall i = n-1, \ldots, 1$. \\
+alors pour $A^{'}x = b$ on a donc \begin{large}$ x_n = \frac{b_n}{a_{m,m}}$\end{large} et \begin{large}$x_i = \frac{1}{a_{ii}}\left( b_i-\sum\limits_{j=1+i}^n a_{ij}x_j \right), \forall i = n-1, \ldots, 1$\end{large}. \vspace{8pt}\\
 \textit{Nous remarquerons que l'implémentation du pivot de Gauss ne nécessitera pas de mettre nos pivots à $1$}
 
+\subsection{Exercice}
+\begin{mdframed}
+Résoudre le système linéaire suivant : 
+\begin{System}
+  x + y + 2z = 3 \\
+  x + 2y + z = 1 \\
+  2x + y + z = 0 
+\end{System}
+\end{mdframed}
+On pose $A= 
+\begin{pmatrix}
+1 & 1 & 2 \\
+1 & 2 & 1 \\
+2 & 1 & 1 \\
+\end{pmatrix}$, 
+$B= 
+\begin{pmatrix}
+3 \\
+1 \\
+0 \\
+\end{pmatrix}$ 
+et
+$X= 
+\begin{pmatrix}
+x \\
+y \\
+z \\
+\end{pmatrix}$ \vspace{6pt}\\
+puis la matrice augmentée 
+$\begin{pmatrix}
+    A & \big| & B \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+    1 & 1 & 2 & \big| & 3 \\
+    1 & 2 & 1 & \big| & 1 \\
+    2 & 1 & 1 & \big| & 0 \\
+\end{pmatrix}$  \vspace{8pt}\\
+Commençons par échelonner la matrice augmentée à l'aide du pivot de Gauss: \vspace{8pt}\\
+$
+\begin{pmatrix}
+    1 & 1 & 2 & \big| & 3 \\
+    1 & 2 & 1 & \big| & 1 \\
+    2 & 1 & 1 & \big| & 0 \\
+\end{pmatrix}
+\xrightarrow[L_2-L_1 \rightarrow L_2]{-(L_3+2L_1) \rightarrow L_3}
+\begin{pmatrix}
+    1 & 1 & 2 & \big| & 3 \\
+    0 & 1 & -1 & \big| & -2 \\
+    0 & 1 & 3 & \big| & 6 \\
+\end{pmatrix}
+\xrightarrow{\frac{L_3-L_2}{4} \rightarrow L_3}
+\begin{pmatrix}
+    1 & 1 & 2 & \big| & 3 \\
+    0 & 1 & -1 & \big| & -2 \\
+    0 & 0 & 1 & \big| & 2 \\
+\end{pmatrix}
+$ \vspace{8pt}\\
+Maintenant que notre matrice augmentée est échelonnée, nous pouvons déterminer les inconnues du système par substitution (en partant du bas): \vspace{8pt}\\
+$
+\begin{pmatrix}
+    1 & 1 & 2 & \big| & 3 \\
+    0 & 1 & -1 & \big| & -2 \\
+    0 & 0 & 1 & \big| & 2 \\
+\end{pmatrix}
+\xrightarrow[L_1-2L_3 \rightarrow L_1]{L_2+L_3 \rightarrow L_2}
+\begin{pmatrix}
+    1 & 1 & 0 & \big| & -1 \\
+    0 & 1 & 0 & \big| & 0 \\
+    0 & 0 & 1 & \big| & 2 \\
+\end{pmatrix}
+\xrightarrow{L_1-L_2 \rightarrow L_1}
+\begin{pmatrix}
+    1 & 0 & 0 & \big| & -1 \\
+    0 & 1 & 0 & \big| & 0 \\
+    0 & 0 & 1 & \big| & 2 \\
+\end{pmatrix}
+$ \vspace{8pt}\\
+
+Nous avons maintenant $A=I_3$ et donc nous pouvons remplacer dans le système $AX=B$, $A$ par $I_3$, ce qui nous donne: \vspace{4pt}\\
+$
+AX=B \iff I_3X=B
+\iff
+    \begin{pmatrix}
+        1 & 0 & 0\\
+        0 & 1 & 0 \\
+        0 & 0 & 1
+    \end{pmatrix}
+    \begin{pmatrix}
+    	x \\
+		y \\
+		z \\
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+    	-1\\
+		0 \\
+		2 \\
+    \end{pmatrix}
+    \iff
+    \begin{pmatrix}
+    	x \\
+		y \\
+		z \\
+    \end{pmatrix}
+    =
+    \begin{pmatrix}
+    	-1\\
+		0 \\
+		2 \\
+    \end{pmatrix}$
+\vspace{6pt}\\
+Nous avons alors notre couple solution du système, qui est : \vspace{4pt}\\
+\begin{System}
+  x = -1 \\
+  y = 0 \\
+  z = 2 
+\end{System}\\
+
+\newpage
 \input{gauss_elimination/subChapter/matrix/gaussMatrix.tex}
+\newpage
 \input{gauss_elimination/subChapter/augmentedMatrix/augmentedM.tex}
 \\
 Nous remarquerons que l'implémentation utilisant la matrice augmentée est sensiblement meilleure en terme d'efficacité. En effet, le temps d'exécution est multiplié par $100$ sur la première implémentation.
