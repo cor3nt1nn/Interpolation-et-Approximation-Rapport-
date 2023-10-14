@@ -1,0 +1,176 @@
+\documentclass{report}
+\setlength{\headheight}{24.1638pt}
+%packages
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{amsthm}
+\usepackage{listings}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{subcaption}
+\usepackage{cleveref}
+
+%commands
+\newtheorem{defi}{Définition}
+\renewcommand{\thedefi}{\empty{}}
+
+\renewcommand\headrulewidth{1pt}
+\newcommand{\crule}[3][c]{%
+    \par\noindent
+    \makebox[\linewidth][#1]{\rule{#2\linewidth}{#3}}}
+\renewcommand{\thechapter}{\Roman{chapter}}
+
+%Style de page
+\pagestyle{fancy}
+\fancyhead[L]{}
+\fancyhead[C]{}
+\fancyhead[R]{\leftmark}
+\allowdisplaybreaks
+\geometry{hmargin=3cm,vmargin=2.5cm}
+
+
+%préambule
+\begin{document}
+\section{Méthode de Jacobi}
+Rappelons que la méthode de \textbf{Jacobi} est itérative et ne garantit pas toujours un résultat. La méthode est définie si A est définie positive.\\
+L'algorithme permet de trouver un résultat si la matrice est dites à diagonale strictement dominante. \\
+Autrement dit, Soit $[a_{ij}]_{0 \leq i,j \leq n}$ les coefficients réels peuplant $A \in \mathcal{M}_{n,n} (\mathbb{R})$, alors si:\\
+$\forall i, \vert a_{i,i} \vert <  \sum \limits_{i \neq j} \vert a_{ij} \vert$, on a que Jacobi converge vers l'unique solution du système $Ax=b$. 
+\subsection{Principe de la méthode}
+On veut résoudre $Ax=b$ avec $A \in \mathcal{M}_{n,n} (\mathbb{R})$, $n \in \mathbb{N}$, $x$ la vecteur colonne contenant les inconnus et $b$ le vecteur colonne des solution. \\
+On pose $D \in \mathcal{M}_{n,n}(\mathbb{R})$ la matrice contenant les coefficients $[a_{i,j}]_{0 \leq i=j \leq n}$ de $A$. \\
+On pose aussi $E$ et $F$ avec $E$ la matrice triangulaire opposée inférieure de $A$ et $F$ la matrice supérieure opposée de $A$.  \\
+On obtient alors:
+\begin{align}
+Ax &=b \\
+(D-E-F)x &= b \\
+Dx -(E+F)x &= b \\
+x &=D^{-1}(E+F)x+D^{-1}b \\
+x^{k+1} &=D^{-1}(E+F)x^{k}+D^{-1}b 
+\end{align}
+Ce qui donne l'algorithme suivant: \\
+Soit $\epsilon$ L'erreur maximale, un point initial $x^0$ et $k=0$ \\
+avec $\epsilon^{0} = \vert \vert A x^0 -b \vert \vert$ \\
+On obtient: 
+\begin{lstlisting}[mathescape=true, frame=single]
+Tant que ($\epsilon^{(k)} \leq \epsilon$)
+$x^{k+1}_i = \frac{1}{a_{ii}} [ b_i - \sum \limits_{j\neq i} a_{ij}x_j^{(k)}], i=1,\ldots,n$
+$\epsilon^{k+1} = \vert \vert Ax^{k+1} -b \vert \vert$
+$k=k+1$
+FIN JACOBI
+\end{lstlisting}
+\textbf{Remarque, on ajoutera aussi un nombre d'iterations maximum afin de ne pas être dans le cas d'une boucle infinies (si jacobi diverge alors l'erreur augmente)}.
+\subsection{Résolution manuelle}
+\textit{Nous en détaillerons seulement une itération} \\
+Soit
+$A= \begin{pmatrix}
+4 & 1 & 0 \\
+-1 & 3 & 6 \\
+-2 & -5 & -3
+\end{pmatrix}$,
+$b = \begin{pmatrix}
+8 \\
+3 \\
+8 \\
+\end{pmatrix}$
+,$x= \begin{pmatrix}
+x_1 \\
+x_2 \\
+x_3
+\end{pmatrix}$ 
+et $x^{(0)} = \begin{pmatrix}
+0 \\
+0\\
+0\\
+\end{pmatrix}$ \\
+On a $A = \underbrace{\begin{pmatrix}
+4 & 0 & 0 \\
+0 & 3 & 0 \\
+0 & 0 & -2
+\end{pmatrix}}_{D}
+- 
+\underbrace{\begin{pmatrix}
+0 & 0& 0 \\
+1 & 0 & 0 \\
+2 & 5 &0 
+\end{pmatrix}}_E
+- \underbrace{\begin{pmatrix}
+0 & -1 & 0 \\
+0 & 0 & -6\\
+0 & 0 & 0
+\end{pmatrix}}_F$ \\
+On a donc $x^{k+1}= D^{-1} [(E+F)x^{k} + b]$ \\
+Dans le cas présent on obtient alors: \\
+$x^1 = \begin{pmatrix}
+\frac{1}{4} & 0 & 0 \\
+0 & \frac{1}{3} & 0 \\
+0 & 0 & -\frac{1}{2}
+\end{pmatrix}
+\left[ \left[ \begin{pmatrix}
+0 & 0 & 0 \\
+1 & 0  & 0 \\
+2 & 5 & 0 \\
+\end{pmatrix} + 
+\begin{pmatrix}
+0 & -1 & 0 \\
+0 & 0 & -6 \\
+0 & 0 & 0 
+\end{pmatrix}
+\right]
+\begin{pmatrix}
+0\\
+0\\
+0
+\end{pmatrix}
++
+\begin{pmatrix}
+8 \\
+3\\
+8
+\end{pmatrix}
+  \right]$ \\
+$x^1 = \begin{pmatrix}
+2 \\
+1 \\
+-4
+\end{pmatrix}$ \\
+et
+\begin{align*}
+\epsilon^{(1)} & = \vert \vert Ax^{(1)} -b \vert \vert \\
+\epsilon^{(1)} & = \vert \vert \begin{pmatrix}
+4 & 1 & 0 \\
+-1 & 3 & 6 \\
+-2 & -5 & -3
+\end{pmatrix}
+\begin{pmatrix}
+2\\
+1\\
+-4
+\end{pmatrix} - 
+\begin{pmatrix}
+8 \\
+3 \\
+8
+\end{pmatrix} \vert \vert \\
+\epsilon^{(1)} & = \vert \vert \begin{pmatrix}
+1 \\
+-26 \\
+-5
+\end{pmatrix} \vert \vert \\
+\epsilon^{(1)} & =  \sqrt{1^2+(-26)^2+(-5)^2} \\
+\epsilon^{(1)} & =  \sqrt{(702)} \\
+\end{align*}
+
+\subsection{Implémentation}
+Pour l'implémentation de cette méthode, nous utiliserons $\epsilon$ comme suit: \\
+$\epsilon^{(k)} = p^k = \text{Max}_{i=1,\ldots, n} \vert \bar{x_i} -\tilde{x_i}^k \vert $ \\
+Où $\bar{x_i}$ est les résultat attendu et $\tilde{x_i}^k$ est l'approximation trouvée à l'étape $k$. \\
+De plus on utilisera aussi une limite d'occurrence, pour pouvoir gérer les matrices où \textbf{Jacobi} diverge.
+\end{document}                                                                                                                                                                                                                                              

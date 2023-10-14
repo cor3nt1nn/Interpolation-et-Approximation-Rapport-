@@ -6,6 +6,9 @@
 #include "source.h"
 //
 //
+/*
+ * Jacobi function with minError and iterations number modifable
+ */
 int jacobi(float **A, float *vector, float *b, float *S, int n, float minErr,
            int bound) {
   float epsilon = epsi(S, vector, n);
