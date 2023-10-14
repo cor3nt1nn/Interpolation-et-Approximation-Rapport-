@@ -61,7 +61,7 @@ Les fonctions \textit{fillM()}, \textit{printMatrix()}, \textit{freeAll()} et \t
 Mon programme demande d'abord 4 entiers $m,p,n,q$ qui correspondent aux dimensions de la première matrice $A \in \mathcal{M}_{mp}$ et de la seconde matrice $X \in \mathcal{M}_{nq}$. Le but étant de résoudre le système $AX=b$, nous initialiserons $X$ à $1$. Ce choix de valeur permettra de contrôler la validité du programme, ainsi à la fin de ce dernier, si $\forall x_i \neq 1, \forall i \in \mathbb{N}_{n}$, on pourra affirmer que le programme est faux.  \\
 Sur les $m\times p$ prochaines lignes, le programme demande les coefficients de $A$. \\
 Sur les $n \times q$ prochaines lignes, le programme demandera les coefficients du vecteur colonne $X$, que l'utilisateur initialisera à $1$. \\
-On peut alors automatiser les entrées en utilisant des fichiers. \\
+On peut alors automatiser les entrées en utilisant des fichiers.\vspace{6pt} \\
 Ainsi les matrices:
 $ M = \begin{pmatrix}
 3 & 0 & 4\\
@@ -75,7 +75,7 @@ $ X = \begin{pmatrix}
 1 \\
 1 \\
 \end{pmatrix}
-$ \\
+$ \vspace{6pt}  \\
 sont représentés par ce fichier d'entrées:
 \begin{lstlisting}[caption=input.txt, basicstyle=\fontsize{8}{10}\selectfont]
 3 3
@@ -85,7 +85,7 @@ sont représentés par ce fichier d'entrées:
 -1 1 2
 1 1 1
 \end{lstlisting}
-Pour ce qui est des résultats produits par mon programme, une fois injecté dans un fichier texte, une input "type" ressemble à ceci. \\
+Pour ce qui est des résultats produits par mon programme, une fois injecté dans un fichier texte, une output "type" ressemble à ceci. \\
 \begin{lstlisting}[caption=Gauss elimination with M and X matrix, basicstyle=\fontsize{8}{10}\selectfont]
 PRINTING MATRIX FROM: 0x556d938672c0 LOCATION :
 3.000000 0.000000 4.000000
@@ -137,7 +137,7 @@ $A_6 = \begin{pmatrix}
 5 & 7 & -9 \\
 \end{pmatrix}
 $
-\\
+\vspace{8pt}\\
 On obtient respectivement ces résultats:
 \\
 \begin{lstlisting}[caption=Matrix 2 results, basicstyle=\fontsize{8}{10}\selectfont]
@@ -209,4 +209,4 @@ x1 = 1.000000
 x2 = 1.000000
 RUNTIME: 0.000002 seconds                       
 \end{lstlisting}
-\textbf{On remarquera} que sur le calcul de $A_4$, on obtient sur des valeurs extrêmement proches de $1$. Ceci est provoqué par des erreurs d'arrondis issus par l'encodage des nombres flottants.  
+\textbf{On apercevra} que sur le calcul de $A_4$, on obtient sur des valeurs extrêmement proches de $1$. Ceci est provoqué par des erreurs d'arrondis issus par l'encodage des nombres flottants.  
