@@ -16,9 +16,7 @@ void generateMatrixCoefficient5(int m, int p) {
 }
 int main(int argc, char *argv[]) {
   (void)argc;
-  puts("3\n3");
-  puts("3\n1");
+  printf("%d%d\n", atoi(argv[1]), atoi(argv[2]));
   generateMatrixCoefficient5(atoi(argv[1]), atoi(argv[2]));
-  puts("1\n1\n1");
   return 0;
 }

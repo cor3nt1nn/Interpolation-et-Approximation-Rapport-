@@ -16,9 +16,10 @@ void genM6Coeff(int m, int p) {
   }
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+  (void)argc;
   puts("3\n3\n3\n1");
-  genM6Coeff(3, 3);
+  genM6Coeff(atoi(argv[1]), atoi(argv[2]));
   puts("1\n1\n1");
   return 0;
 }
