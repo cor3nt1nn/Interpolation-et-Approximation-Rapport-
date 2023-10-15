@@ -5,4 +5,30 @@
   language=C,                                       
   showstringspaces=false
 }
-\section{Implémentation de l'algorithme de Gauss-Seidel}
+\section{Méthode de Gauss-Seidel}
+\subsection{Introduction à la méthode de Gauss-Seidel}
+La méthode de Gauss-Seidel est une méthode itérative pour résoudre 
+les systèmes linéaires de la forme $Ax=b$, où $A$ est une matrice carrée d'ordre $n$ et $x, b$ sont des vecteurs de $\mathbb{R}^n$. 
+C'est une méthode qui génère 
+une suite qui converge vers la solution de ce système lorsque celle-ci en a une et lorsque les conditions de convergence suivantes sont satisfaites (quels que soient le vecteur $b$ et le point initial $x^0$):
+\begin{itemize}
+  \item Si la matrice $A$ est symétrique définie positive,
+  \item Si la matrice $A$ est à diagonale strictement dominante.
+\end{itemize}
+\subsection{Mise en place des matrices pour la méthode de Gauss-Seidel}
+Soit $Ax=b$ le système linéaire à résoudre, où $A\in \mathcal{M}_{n,n}$ et $b\in  \mathcal{M}_{n,1}$. On cherche $x\in \mathcal{M}_{n,1}$ solution du système.
+Dans un premier temps, on va écrire $A$ sous la forme $A=D-E-F$ où $D$ est une matrice diagonale, $E$ est une matrice triangulaire inférieure, et $F$ est une matrice triangulaire supérieure. \\
+On peut alors écrire:
+\begin{align}
+  Ax&=b \\
+  \Leftrightarrow  (D-E-F)x&=b \\
+  \Leftrightarrow  Dx&=b-(E+F)x \\
+  \Leftrightarrow  x&=D^{-1}[b-(E+F)x]
+\end{align}
+On définit ensuite une suite de vecteurs $(x^k)$ en choisissant un vecteur $x^0$ et par la formule de récurrence:\\
+\begin{equation}
+  x_i^{k+1}=\frac{1}{a_{i,i}}\Bigg(b_i-\sum \limits_{j = 1}^{i-1}a_{i,j}x_{j}^{k+1} - \sum \limits_{j = i+1}^{n}a_{i,j}x_{j}^{k}\Bigg)
+\end{equation}
+\subsection{Algorithme}
+\subsection{Résolution manuelle}
+
