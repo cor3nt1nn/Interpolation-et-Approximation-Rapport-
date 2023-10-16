@@ -71,8 +71,22 @@ On définit ensuite une suite de vecteurs $(x^k)$ en choisissant un vecteur $x^0
   x_i^{k+1}=\frac{1}{a_{i,i}}\Bigg(b_i-\sum \limits_{j = 1}^{i-1}a_{i,j}x_{j}^{k+1} - \sum \limits_{j = i+1}^{n}a_{i,j}x_{j}^{k}\Bigg)
 \end{equation}
 \subsection{Algorithme}
-
+Pour résoudre un système $Ax=b$, avec $A \in \mathcal{M}_{n}$ et $b\in \mathcal{M}_{n,1}$, on s'appuie sur l'algorithme suivant en posant :
+\begin{itemize}
+  \item un vecteur initial $x^{(0)}$ choisi au préalable,
+  \item l'erreur à l'itération k=0 calculée par $\varepsilon^{(0)}=\Vert Ax^{(0)}-b\Vert$
+\end{itemize}\vspace{6pt}
+\begin{lstlisting}[mathescape=true, frame=single, basicstyle=\linespread{1.5}\fontsize{8}{10}\selectfont]
 $x^{(0)}=x_0 \in \mathcal{M}_{n,1}$
+$\varepsilon^{(0)}=\varepsilon \text{ (erreur)}$
+$k=0$
+Tant Que $(\varepsilon^{(k)} >= \varepsilon)$ faire:
+      Pour $i=1$ a $n$:
+            $x_{i}^{k+1}=\frac{1}{a_{i,i}}\Bigg[b_i-\Bigg(\sum \limits_{j=i+1}^{n}a_{i,j}x_j^{(k)} + \sum \limits_{j=1}^{i-1}a_{i,j}x_j^{(k+1)}\Bigg)\Bigg]   \text{  pour  } i=1, ..., n$
+      $\varepsilon^{(k+1)}=\Vert Ax^{(k+1)}-b\Vert$
+      $k=k+1$
+Fin Tant Que
+\end{lstlisting}
 \subsection{Résolution manuelle}
 \subsection{Implémentation}
 \subsection{Exemples d'exécution}
