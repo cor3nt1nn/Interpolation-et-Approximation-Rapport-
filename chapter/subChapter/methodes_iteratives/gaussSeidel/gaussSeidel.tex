@@ -56,7 +56,7 @@ une suite qui converge vers la solution de ce système lorsque celle-ci en a une
   \item Si la matrice $A$ est symétrique définie positive,
   \item Si la matrice $A$ est à diagonale strictement dominante.
 \end{itemize}
-\subsection{Mise en place des matrices pour la méthode de Gauss-Seidel}
+\subsection{Mise en place des matrices pour la méthode de Gauss-Seidel}\label{decompMatrice}
 Soit $Ax=b$ le système linéaire à résoudre, où $A\in \mathcal{M}_{n,n}$ et $b\in  \mathcal{M}_{n,1}$. On cherche $x\in \mathcal{M}_{n,1}$ solution du système.
 Dans un premier temps, on va écrire $A$ sous la forme $A=D-E-F$ où $D$ est une matrice diagonale, $E$ est une matrice triangulaire inférieure, et $F$ est une matrice triangulaire supérieure. \\
 On peut alors écrire:
@@ -74,21 +74,215 @@ On définit ensuite une suite de vecteurs $(x^k)$ en choisissant un vecteur $x^0
 Pour résoudre un système $Ax=b$, avec $A \in \mathcal{M}_{n}$ et $b\in \mathcal{M}_{n,1}$, on s'appuie sur l'algorithme suivant en posant :
 \begin{itemize}
   \item un vecteur initial $x^{(0)}$ choisi au préalable,
-  \item l'erreur à l'itération k=0 calculée par $\varepsilon^{(0)}=\Vert Ax^{(0)}-b\Vert$
+  \item l'erreur à l'itération k=0 calculée par $\varepsilon^{(0)}=\Vert Ax^{(0)}-b\Vert$,
+  \item une variable $k$ qui sera notre compteur d'itération.
 \end{itemize}\vspace{6pt}
+\label{algogs}
 \begin{lstlisting}[mathescape=true, frame=single, basicstyle=\linespread{1.5}\fontsize{8}{10}\selectfont]
 $x^{(0)}=x_0 \in \mathcal{M}_{n,1}$
 $\varepsilon^{(0)}=\varepsilon \text{ (erreur)}$
 $k=0$
 Tant Que $(\varepsilon^{(k)} >= \varepsilon)$ faire:
       Pour $i=1$ a $n$:
-            $x_{i}^{k+1}=\frac{1}{a_{i,i}}\Bigg[b_i-\Bigg(\sum \limits_{j=i+1}^{n}a_{i,j}x_j^{(k)} + \sum \limits_{j=1}^{i-1}a_{i,j}x_j^{(k+1)}\Bigg)\Bigg]   \text{  pour  } i=1, ..., n$
+            $x_{i}^{(k+1)}=\frac{1}{a_{i,i}}\Bigg[b_i-\Bigg(\sum \limits_{j=i+1}^{n}a_{i,j}x_j^{(k)} + \sum \limits_{j=1}^{i-1}a_{i,j}x_j^{(k+1)}\Bigg)\Bigg]   \text{  pour  } i=1, ..., n$
       $\varepsilon^{(k+1)}=\Vert Ax^{(k+1)}-b\Vert$
       $k=k+1$
 Fin Tant Que
 \end{lstlisting}
 \subsection{Résolution manuelle}
+\vspace{10pt}
+Soit $A=
+\begin{pmatrix}
+  1 & 2 & 2 \\
+  1 & 3 & 3 \\
+  3 & 7 & 8 \\
+\end{pmatrix} \in \mathcal{M}_{3}(\mathbb{R}) \text{, et } 
+b=
+\begin{pmatrix}
+  2 \\
+  2 \\
+  8 \\
+\end{pmatrix} \in \mathcal{M}_{3, 1}(\mathbb{R})$\vspace{10pt}\\
+\underline{Calculons le vecteur $x^{(1)}$ (vecteur x trouvé après 1 itération de l'algorithme) solution du système $Ax=b$, }\vspace{10pt}\\
+\underline{en prenant comme point initial $x^{(0)}=(0,0,0)$:} \\
+\subsubsection{Résolution par le calcul itératif}\label{calcite}
+Dans cette sous-partie, nous résolverons le système de la même manière que le fait l'algorithme sus-cité.\\
+Pour obtenir le vecteur $x^{(1)}$ (obtenu à l'itération $k=1$), il nous faut obtenir $x_1^{(1)}$, $x_2^{(1)}$,$x_3^{(1)}$ par la formule suivante :\\
+\begin{center}
+$x_{i}^{(k+1)}=\frac{1}{a_{i,i}}\Bigg[b_i-\Bigg(\sum \limits_{j=i+1}^{n}a_{i,j}x_j^{(k)} + \sum \limits_{j=1}^{i-1}a_{i,j}x_j^{(k+1)}\Bigg)\Bigg]   \text{  pour  } i=1, ..., 3$
+\end{center}
+\underline{Pour $i=1$:}\\
+\begin{align}
+  x_{1}^{(1)}&=\frac{1}{a_{1,1}}\Bigg[b_1-\Bigg(\sum \limits_{j=2}^{3}a_{1,j}x_j^{(0)} + \sum \limits_{j=1}^{0}a_{1,j}x_j^{(1)}\Bigg)\Bigg]\\
+  &=\frac{1}{1}\Bigg[2-\Bigg(a_{1,2}x_2^{(0)} + a_{2,2}x_2^{(0)}+0\Bigg)\Bigg]\\
+  &=2-2\times 0 -3\times 0=2
+\end{align}
+\underline{Pour $i=2$:}\\
+\begin{align}
+  x_{2}^{(1)}&=\frac{1}{a_{2,2}}\Bigg[b_2-\Bigg(\sum \limits_{j=3}^{3}a_{2,j}x_j^{(0)} + \sum \limits_{j=1}^{1}a_{2,j}x_j^{(1)}\Bigg)\Bigg]\\
+  &=\frac{1}{3}\Bigg[2-\Bigg(a_{2,3}x_3^{(0)} + a_{2,1}x_1^{(1)}\Bigg)\Bigg]\\
+  &=\frac{1}{3}\Bigg(2-3\times0-1\times2\Bigg)\\
+  &=\frac{1}{3}\times 0=0
+\end{align}
+\underline{Pour $i=3$:}\\
+\begin{align}
+  x_{3}^{(1)}&=\frac{1}{a_{3,3}}\Bigg[b_3-\Bigg(\sum \limits_{j=4}^{3}a_{3,j}x_j^{(0)} + \sum \limits_{j=1}^{2}a_{3,j}x_j^{(1)}\Bigg)\Bigg]\\
+  &=\frac{1}{8}\Bigg[8-\Bigg(0+a_{3,1}x_1^{(1)} + a_{3,2}x_2^{(1)}\Bigg)\Bigg]\\
+  &=\frac{1}{8}\Bigg(8-3\times 2 - 7\times 0\Bigg)\\
+  &=\frac{1}{8}\times 2=\frac{1}{4}
+\end{align}
+\underline{Conclusion:}\\
+Nous avons $x_1^{(1)}=2$, $x_2^{(1)}=0$,  $x_3^{(1)}=\frac{1}{4}$.  Et donc, $x^{(1)}=
+\begin{pmatrix}
+  x_1^{(1)}\vspace{6pt}\\
+  x_2^{(1)}\vspace{6pt}\\
+  x_3^{(1)}
+\end{pmatrix}=
+\begin{pmatrix}
+  2\vspace{6pt}\\
+  0\vspace{6pt}\\
+  \frac{1}{4}
+\end{pmatrix}$0
+\subsubsection{Résolution par le calcul matriciel}
+Dans la section \ref{decompMatrice}, nous avons vu que l'on pouvait décomposer la matrice $A$ par une matrice diagonale $D$, une matrice triangulaire inférieure $E$, et une matrice triangulaire supérieure $F$. Ceci fait, nous pouvons obtenir le vecteur $x$ par la formule suivante: \\
+\begin{center}
+  $x^{(k+1)}=D^{-1}[b-(E+F)x^{(k)}]$\\
+\end{center}
+Nous avons alors:\vspace{8pt}\\
+$A=
+\begin{pmatrix}
+  1&2&2\\
+  1&3&3\\
+  3&7&8\\
+\end{pmatrix}=
+\underbrace{\begin{pmatrix}
+  1&0&0\\
+  0&3&0\\
+  0&0&8\\
+\end{pmatrix}}_{D}-
+\underbrace{\begin{pmatrix}
+  0&-2&-2\\
+  0&0&-3\\
+  0&0&0\\
+\end{pmatrix}}_{E}-
+\underbrace{\begin{pmatrix}
+  0&0&0\\
+  -1&0&0\\
+  -3&-7&0\\
+\end{pmatrix}}_{F}
+$\vspace{8pt}\\
+Nous obtenons alors:\vspace{8pt}\\
+\begin{align}
+x^{(1)}&=\begin{pmatrix}
+  \frac{1}{1}&0&0\\
+  0&\frac{1}{3}&0\\
+  0&0&\frac{1}{8}\\
+\end{pmatrix}\Bigg[\begin{pmatrix}
+  2 \\
+  2 \\
+  8 \\
+\end{pmatrix}-\Bigg(\begin{pmatrix}
+  0&-2&-2\\
+  0&0&-3\\
+  0&0&0\\
+\end{pmatrix}+\begin{pmatrix}
+  0&0&0\\
+  -1&0&0\\
+  -3&-7&0\\
+\end{pmatrix}\Bigg)\begin{pmatrix}
+  0 \\
+  0 \\
+  0 \\
+\end{pmatrix}\Bigg]\\
+&=\begin{pmatrix}
+  \frac{1}{1}&0&0\\
+  0&\frac{1}{3}&0\\
+  0&0&\frac{1}{8}\\
+\end{pmatrix}\begin{pmatrix}
+  2 \\
+  2 \\
+  8 \\
+\end{pmatrix}\\
+&=\begin{pmatrix}
+  2 \vspace{4pt}\\
+  \frac{2}{3} \vspace{4pt}\\
+  1 \\
+\end{pmatrix}
+\end{align}
+\textit{\underline{Remarque:} Au fur et à mesure des itérations, le vecteur $x$ donné par le calcul itératif effectué dans la partie \ref{calcite} se rapproche de la solution donnée par le précédent calcul. Il est alors normal que le vecteur trouvé au bout de la première itération soit différent du vecteur trouvé ci-dessus.}
 \subsection{Implémentation}
+\subsubsection{Commentaires fonctionnels}
+\textit{\underline{Note:} L'implémentation qui suit utilise exactement les mêmes fonctions usuelles de manipulation de matrice que l'implémentation de l'algorithme de Gauss décrit dans la section \ref{fonctusu}. De plus, dans cette implémentation, nous définirons une variable $k$ qui sera notre compteur d'itération et qui permettra l'arrêt de notre code si la suite ne converge pas. Enfin, notre variable erreur $\varepsilon$ sera mise à jour à chaque itération de la manière suivante:\\}
+\begin{center}
+  $\varepsilon^{(k)}=p^{(k)}=Max_{i=1,...,n}|\overline{x}_i-\widetilde{x}_i^k|$
+\end{center}\vspace{8pt}
+Nous détaillerons dans cette section uniquement les fonctions dites "non-usuelles" qui vont nous servir pour l'implémentation de l'algorithme de Gauss-Seidel. Il s'agit ici de la fonction de mise à jour de notre variable erreur et de la fonction implémentant l'algorithme de Gauss-Seidel.\vspace{8pt}\\
+\textbf{\underline{Fonction \textit{majEpsilon:}}}\vspace{6pt}\\
+La fonction \textbf{majEpsilon} permet de mettre à jour la variable d'erreur $\varepsilon$ lors de l'exécution de notre algorithme. Grâce au vecteur $x^{(k)}$ qui représente la solution actuelle de notre système d'équations, la fonction calcule la différence absolue entre chaque élément $x_i^{(k)}$ et $1$. Cela permet de mesurer à quel point les valeurs actuelles se rapprochent de 1, qui est notre valeur cible pour les solutions convergentes. La fonction conserve le maximum de ces différences absolues en tant que mesure d'erreur afin de mettre à jour notre variable $\varepsilon$. Cela permet de contrôler la précision de l'algorithme et de décider quand il a convergé de manière satisfaisante vers la solution recherchée. La fonction \textbf{majEpsilon} joue donc un rôle dans la détermination du critère d'arrêt de l'algorithme. Voici son implémentation en C:
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont]
+float majEpsilon(float** matXk, int row){
+  float maxforEps=0;
+  for(int i=0; i<row; i++){
+      float soustr=fabs(1-matXk[i][0]);
+      printf("%f\n", matXk[i][0]);
+      if (soustr>maxforEps){
+          maxforEps=soustr;
+      }
+  }
+  return maxforEps;
+}
+\end{lstlisting}
+\textbf{\underline{Fonction \textit{gaussSeidel:}}}\vspace{6pt}\\
+La fonction \textbf{gaussSeidel} implémente l'algorithme de Gauss-Seidel tel que décrit précédemment dans la section \ref{algogs}. Par la programmation itérative, notre algorithme mettra à jour les solutions actuelles jusqu'à ce que l'erreur minimale définie soit atteinte ou que le nombre maximal d'itérations soit atteint. Voici son implémentation en C:
+\begin{lstlisting}[mathescape=true, language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont]
+  float** gaussSeidel(float **matA, float **matB, int row, int column, int nbIterMax){
+    //CREATING OUR INITIAL VECTOR
+    float **matXk=createMatrix(row, 1);
+    for(int rowX=0; rowX<row; rowX++){
+			matXk[rowX][0]=0;
+    }
+
+    //CREATING OUR SOLUTION VECTOR AT ITERATION k
+    float **matXk1=createMatrix(row, 1);
+
+    //INITIALIZING OUR ERROR VARIABLE AND ITERATION COUNTER
+    float epsilon=majEpsilon(matXk, row);;
+    int iter=0;
+    
+    while ((epsilon>=pow(10,-6)) && (iter<nbIterMax)){
+        for(int i=0; i<row ; i++){
+            float sumF=0;
+            float sumE=0;
+
+            //CALCULATION OF F
+            for(int j=i+1; j<row ; j++){
+                sumF+=matA[i][j]*matXk[j][0];
+            }
+
+            //CALCULATION OF E
+            for(int j=0; j<i ; j++){
+                sumE+=matA[i][j]*matXk1[j][0];
+            }
+
+            //CALCULATION OF ELEMENT $X_i^{(k)}$"
+            matXk1[i][0]=(matB[i][0]-sumF-sumE)/matA[i][i];
+
+        }
+
+        //UPDATING OUR SOLUTION VECTOR
+        matXk[0][0]=matXk1[0][0];
+        matXk[1][0]=matXk1[1][0];
+        matXk[2][0]=matXk1[2][0];
+
+        //UPDATING OUR ERROR VARIABLE AND ITERATION COUNTER
+        epsilon=majEpsilon(matXk, row);
+        iter+=1;
+    }
+
+    //RETURN THE SOLUTION VECTOR
+    return matXk1;
+}
+\end{lstlisting}
 \subsection{Exemples d'exécution}
 \end{document}
 
