@@ -1,3 +1,44 @@
+\documentclass{report}
+\setlength{\headheight}{24.1638pt}
+%packages
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{amsthm}
+\usepackage{listings}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{subcaption}
+\usepackage{cleveref}
+
+%commands
+\newtheorem{defi}{Définition}
+\renewcommand{\thedefi}{\empty{}}
+
+\renewcommand\headrulewidth{1pt}
+\newcommand{\crule}[3][c]{%
+    \par\noindent
+    \makebox[\linewidth][#1]{\rule{#2\linewidth}{#3}}}
+\renewcommand{\thechapter}{\Roman{chapter}}
+
+%Style de page
+\pagestyle{fancy}
+\fancyhead[L]{}
+\fancyhead[C]{}
+\fancyhead[R]{\leftmark}
+\allowdisplaybreaks
+\geometry{hmargin=3cm,vmargin=2.5cm}
+
+
+%préambule
+\begin{document}
+
 \lstset{
   firstnumber=0, 
   numbers=left,               
@@ -30,5 +71,10 @@ On définit ensuite une suite de vecteurs $(x^k)$ en choisissant un vecteur $x^0
   x_i^{k+1}=\frac{1}{a_{i,i}}\Bigg(b_i-\sum \limits_{j = 1}^{i-1}a_{i,j}x_{j}^{k+1} - \sum \limits_{j = i+1}^{n}a_{i,j}x_{j}^{k}\Bigg)
 \end{equation}
 \subsection{Algorithme}
+
+$x^{(0)}=x_0 \in \mathcal{M}_{n,1}$
 \subsection{Résolution manuelle}
+\subsection{Implémentation}
+\subsection{Exemples d'exécution}
+\end{document}
 
