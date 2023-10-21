@@ -4,10 +4,10 @@ CREATE A 2D FLOAT MATRIX
 
 float** createMatrix(int row, int column){
 	float **mat=NULL;
-	mat=malloc(row* sizeof(int*));
+	mat=malloc(row* sizeof(float*));
 	if(mat==NULL){return NULL;}
 	for (int i=0; i<row; i++){
-		mat[i]=malloc(column* sizeof(int));
+		mat[i]=malloc(column* sizeof(float));
 		if(mat[i]==NULL){
 			for(int j=0; j<i; j++){
 				free(mat[j]);
