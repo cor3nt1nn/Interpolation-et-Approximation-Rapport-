@@ -9,7 +9,6 @@ float majEpsilon(float** matXk, int row){
     float maxforEps=0;
     for(int i=0; i<row; i++){
         float soustr=fabs(1-matXk[i][0]);
-        printf("%f\n", matXk[i][0]);
         if (soustr>maxforEps){
             maxforEps=soustr;
         }
@@ -45,8 +44,10 @@ float** gaussSeidel(FILE* fd, float **matA, float **matB, float **matXk, int row
         //Maj Epsilon
         epsilon=majEpsilon(matXk, row);
         fprintf(fd, "%.6f ", epsilon);
-        printf("A l'iteration %d, Epsilon: %f\n", iter, epsilon);
         iter+=1;
+    }
+    if(iter==nbIterMax-1){
+        puts("Nombre d'itérations maximum atteint");
     }
     fprintf(fd, "\n");
     fprintf(fd, "%d\n", iter);
@@ -71,23 +72,23 @@ int main(int argc, char const *argv[])
 
 	float** Amatrix=createMatrix(rowA, columnA);
 	completeMatrix(Amatrix, rowA, columnA);
-	puts("\n		A matrix \n");
+	puts("\n		A matrix");
 	printMatrix(Amatrix, rowA, columnA);
 	
 	//B Matrix
 	float** Bmatrix=createMatrix(rowA, 1);
 	generateB(Amatrix, Bmatrix, rowA, columnA);
-	puts("\n		B matrix \n");
+	puts("		B matrix");
 	printMatrix(Bmatrix, rowA, 1);
 	
 	//Solve the system
-	puts("\n		SOLVING \n");
+	puts("		SOLVING");
     float** Xvector=createMatrix(rowA, 1);
     for(int rowX=0; rowX<rowA; rowX++){
 			Xvector[rowX][0]=0;
     }
     Xvector=gaussSeidel(fd, Amatrix, Bmatrix, Xvector, rowA, columnA, 1000);
-	puts("\n		SOLUTION VECTOR X \n");
+	puts("		SOLUTION VECTOR X ");
 	printMatrix(Xvector, rowA, 1);
 	
 	//Free
@@ -98,6 +99,6 @@ int main(int argc, char const *argv[])
 
 	end = clock();
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-    printf("\nTemps d'exécution : %f secondes\n", cpu_time_used);
+    printf("Temps d'execution : %f secondes\n", cpu_time_used);
     return 0;
 }

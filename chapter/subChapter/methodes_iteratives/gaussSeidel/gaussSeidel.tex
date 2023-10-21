@@ -235,13 +235,9 @@ float majEpsilon(float** matXk, int row){
 \textbf{\underline{Fonction \textit{gaussSeidel:}}}\vspace{6pt}\\
 La fonction \textbf{gaussSeidel} implémente l'algorithme de Gauss-Seidel tel que décrit précédemment dans la section \ref{algogs}. Par la programmation itérative, notre algorithme mettra à jour les solutions actuelles jusqu'à ce que l'erreur minimale définie soit atteinte ou que le nombre maximal d'itérations soit atteint. Voici son implémentation en C:
 \begin{lstlisting}[mathescape=true, language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont]
-  float** gaussSeidel(float **matA, float **matB, int row, int column, int nbIterMax){
-    //CREATING OUR INITIAL VECTOR
-    float **matXk=createMatrix(row, 1);
-    for(int rowX=0; rowX<row; rowX++){
-			matXk[rowX][0]=0;
-    }
-
+  float** gaussSeidel(float **matA, float **matB, float **matXk, int row, int column, 
+                      int nbIterMax)
+  {
     //CREATING OUR SOLUTION VECTOR AT ITERATION k
     float **matXk1=createMatrix(row, 1);
 
@@ -264,15 +260,15 @@ La fonction \textbf{gaussSeidel} implémente l'algorithme de Gauss-Seidel tel qu
                 sumE+=matA[i][j]*matXk1[j][0];
             }
 
-            //CALCULATION OF ELEMENT $X_i^{(k)}$"
+            //CALCULATION OF ELEMENT $X_i^{(k)}$
             matXk1[i][0]=(matB[i][0]-sumF-sumE)/matA[i][i];
 
         }
 
         //UPDATING OUR SOLUTION VECTOR
-        matXk[0][0]=matXk1[0][0];
-        matXk[1][0]=matXk1[1][0];
-        matXk[2][0]=matXk1[2][0];
+        for(int k=0; k<row ; k++){
+            matXk[k][0]=matXk1[k][0];
+        }
 
         //UPDATING OUR ERROR VARIABLE AND ITERATION COUNTER
         epsilon=majEpsilon(matXk, row);
@@ -284,5 +280,290 @@ La fonction \textbf{gaussSeidel} implémente l'algorithme de Gauss-Seidel tel qu
 }
 \end{lstlisting}
 \subsection{Exemples d'exécution}
+Soient les matrices $A$ données dans le TP et dans l'annexe du document (section \ref{annexe}).
+En résolvant le système $Ax=b$ en question, nous obtenons respectivement les résultats suivants:
+\\
+\begin{lstlisting}[caption={$A_1X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
+                  A matrix 
+  3.000000   0.000000   4.000000   
+  7.000000   4.000000   2.000000   
+  -1.000000   1.000000   2.000000   
+                  B matrix 
+  7.000000   
+  13.000000   
+  2.000000   
+                  SOLVING 
+                  SOLUTION VECTOR X 
+  -nan   
+  -nan   
+  -nan   
+  Temps d'execution : 0.000515 secondes
+\end{lstlisting}
+\begin{lstlisting}[caption={$A_2X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
+                  A matrix
+  -3.000000   3.000000   -6.000000   
+  -4.000000   7.000000   8.000000   
+  5.000000   7.000000   -9.000000   
+                  B matrix
+  -6.000000   
+  11.000000   
+  3.000000   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  -nan   
+  -nan   
+  -nan   
+  Temps d'execution : 0.000419 secondes
+\end{lstlisting}
+\begin{lstlisting}[caption={$A_3X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
+                  A matrix
+  4.000000   1.000000   1.000000   
+  2.000000   -9.000000   0.000000   
+  0.000000   -8.000000   6.000000   
+                  B matrix
+  6.000000   
+  -7.000000   
+  -2.000000   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000000   
+  1.000000   
+  1.000000   
+  Temps d'execution : 0.000399 secondes
+\end{lstlisting}
+\begin{lstlisting}[caption={$A_4X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
+                  A matrix
+  7.000000   6.000000   9.000000   
+  4.000000   5.000000   -4.000000   
+  -7.000000   -3.000000   8.000000   
+                  B matrix
+  22.000000   
+  5.000000   
+  -2.000000   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000000   
+  0.999999   
+  1.000000   
+  Temps d'execution : 0.000408 secondes
+\end{lstlisting}
+\begin{lstlisting}[caption={$A_5X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
+                  A matrix
+  1.000000   0.500000   0.250000   
+  0.500000   1.000000   0.000000   
+  0.250000   0.000000   1.000000   
+                  B matrix
+  1.750000   
+  1.500000   
+  1.250000   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000001   
+  1.000000   
+  1.000000   
+  Temps d'execution : 0.000431 secondes
+\end{lstlisting}
+\begin{lstlisting}[caption={$A_6X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
+                  A matrix
+  1.000000   0.500000   0.250000   0.125000   0.062500   0.031250   
+  0.500000   1.000000   0.000000   0.000000   0.000000   0.000000   
+  0.250000   0.000000   1.000000   0.000000   0.000000   0.000000   
+  0.125000   0.000000   0.000000   1.000000   0.000000   0.000000   
+  0.062500   0.000000   0.000000   0.000000   1.000000   0.000000   
+  0.031250   0.000000   0.000000   0.000000   0.000000   1.000000   
+                  B matrix
+  1.968750   
+  1.500000   
+  1.250000   
+  1.125000   
+  1.062500   
+  1.031250   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000001   
+  1.000000   
+  1.000000   
+  1.000000   
+  1.000000   
+  1.000000   
+  Temps d'execution : 0.000467 secondes
+\end{lstlisting}
+\begin{lstlisting}[caption={$A_7X=B$} results, basicstyle=\fontsize{5}{8}\selectfont]
+                  A matrix
+  1.000000   0.500000   0.250000   0.125000   0.062500   0.031250   0.015625   0.007812   
+  0.500000   1.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   
+  0.250000   0.000000   1.000000   0.000000   0.000000   0.000000   0.000000   0.000000   
+  0.125000   0.000000   0.000000   1.000000   0.000000   0.000000   0.000000   0.000000   
+  0.062500   0.000000   0.000000   0.000000   1.000000   0.000000   0.000000   0.000000   
+  0.031250   0.000000   0.000000   0.000000   0.000000   1.000000   0.000000   0.000000   
+  0.015625   0.000000   0.000000   0.000000   0.000000   0.000000   1.000000   0.000000   
+  0.007812   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   1.000000   
+                  B matrix
+  1.992187   
+  1.500000   
+  1.250000   
+  1.125000   
+  1.062500   
+  1.031250   
+  1.015625   
+  1.007812   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000001   
+  1.000000   
+  1.000000   
+  1.000000   
+  1.000000   
+  1.000000   
+  1.000000   
+  1.000000   
+  Temps d'execution : 0.000526 secondes
+\end{lstlisting}
+\begin{lstlisting}[caption={$A_8X=B$} results, basicstyle=\fontsize{5}{8}\selectfont]
+                  A matrix
+  1.000000   0.500000   0.250000   0.125000   0.062500   0.031250   0.015625   0.007812   0.003906   0.001953   
+  0.500000   1.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   
+  0.250000   0.000000   1.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   
+  0.125000   0.000000   0.000000   1.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   
+  0.062500   0.000000   0.000000   0.000000   1.000000   0.000000   0.000000   0.000000   0.000000   0.000000   
+  0.031250   0.000000   0.000000   0.000000   0.000000   1.000000   0.000000   0.000000   0.000000   0.000000   
+  0.015625   0.000000   0.000000   0.000000   0.000000   0.000000   1.000000   0.000000   0.000000   0.000000   
+  0.007812   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   1.000000   0.000000   0.000000   
+  0.003906   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   1.000000   0.000000   
+  0.001953   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   1.000000   
+                  B matrix
+  1.998046   
+  1.500000   
+  1.250000   
+  1.125000   
+  1.062500   
+  1.031250   
+  1.015625   
+  1.007812   
+  1.003906   
+  1.001953   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000001   
+  1.000000   
+  1.000000   
+  1.000000   
+  1.000000   
+  1.000000   
+  1.000000   
+  1.000000   
+  1.000000   
+  1.000000   
+  Temps d'execution : 0.000572 secondes
+\end{lstlisting}
+\begin{lstlisting}[caption={$A_9X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
+                  A matrix
+  3.000000   -1.000000   0.000000   
+  -2.000000   3.000000   -1.000000   
+  0.000000   -2.000000   3.000000   
+                  B matrix
+  2.000000   
+  0.000000   
+  1.000000   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000000   
+  0.999999   
+  1.000000   
+  Temps d'execution : 0.000424 secondes
+\end{lstlisting}
+\begin{lstlisting}[caption={$A_10X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
+                  A matrix
+  3.000000   -1.000000   0.000000   0.000000   0.000000   0.000000   
+  -2.000000   3.000000   -1.000000   0.000000   0.000000   0.000000   
+  0.000000   -2.000000   3.000000   -1.000000   0.000000   0.000000   
+  0.000000   0.000000   -2.000000   3.000000   -1.000000   0.000000   
+  0.000000   0.000000   0.000000   -2.000000   3.000000   -1.000000   
+  0.000000   0.000000   0.000000   0.000000   -2.000000   3.000000   
+                  B matrix
+  2.000000   
+  0.000000   
+  0.000000   
+  0.000000   
+  0.000000   
+  1.000000   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000000   
+  0.999999   
+  0.999999   
+  0.999999   
+  0.999999   
+  0.999999   
+  Temps d'execution : 0.000376 secondes
+\end{lstlisting}
+\begin{lstlisting}[caption={$A_11X=B$} results, basicstyle=\fontsize{5}{8}\selectfont]
+                  A matrix
+  3.000000   -1.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   
+  -2.000000   3.000000   -1.000000   0.000000   0.000000   0.000000   0.000000   0.000000   
+  0.000000   -2.000000   3.000000   -1.000000   0.000000   0.000000   0.000000   0.000000   
+  0.000000   0.000000   -2.000000   3.000000   -1.000000   0.000000   0.000000   0.000000   
+  0.000000   0.000000   0.000000   -2.000000   3.000000   -1.000000   0.000000   0.000000   
+  0.000000   0.000000   0.000000   0.000000   -2.000000   3.000000   -1.000000   0.000000   
+  0.000000   0.000000   0.000000   0.000000   0.000000   -2.000000   3.000000   -1.000000   
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   -2.000000   3.000000   
+                  B matrix
+  2.000000   
+  0.000000   
+  0.000000   
+  0.000000   
+  0.000000   
+  0.000000   
+  0.000000   
+  1.000000   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000000   
+  1.000000   
+  1.000000   
+  0.999999   
+  0.999999   
+  0.999999   
+  0.999999   
+  0.999999   
+  Temps d'execution : 0.000587 secondes
+\end{lstlisting}
+\begin{lstlisting}[caption={$A_12X=B$} results, basicstyle=\fontsize{5}{8}\selectfont]
+                  A matrix
+  3.000000   -1.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   
+  -2.000000   3.000000   -1.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   
+  0.000000   -2.000000   3.000000   -1.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   
+  0.000000   0.000000   -2.000000   3.000000   -1.000000   0.000000   0.000000   0.000000   0.000000   0.000000   
+  0.000000   0.000000   0.000000   -2.000000   3.000000   -1.000000   0.000000   0.000000   0.000000   0.000000   
+  0.000000   0.000000   0.000000   0.000000   -2.000000   3.000000   -1.000000   0.000000   0.000000   0.000000   
+  0.000000   0.000000   0.000000   0.000000   0.000000   -2.000000   3.000000   -1.000000   0.000000   0.000000   
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   -2.000000   3.000000   -1.000000   0.000000   
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   -2.000000   3.000000   -1.000000   
+  0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   -2.000000   3.000000   
+                  B matrix
+  2.000000   
+  0.000000   
+  0.000000   
+  0.000000   
+  0.000000   
+  0.000000   
+  0.000000   
+  0.000000   
+  0.000000   
+  1.000000   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000000   
+  1.000000   
+  1.000000   
+  1.000000   
+  0.999999   
+  0.999999   
+  0.999999   
+  0.999999   
+  0.999999   
+  1.000000   
+  Temps d'execution : 0.000439 secondes
+\end{lstlisting}
 \end{document}
 
