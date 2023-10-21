@@ -30,7 +30,7 @@ PRINT A 2D FLOAT MATRIX
 void printMatrix(float **mat, int row, int column){
 	for (int i=0; i<row; i++){
     		for(int j=0; j<column; j++){
-         		printf("%f   ", mat[i][j]);
+         		printf("%.3f   ", mat[i][j]);
     		}
     		printf("\n");
 	}
@@ -121,29 +121,29 @@ int main(){
 
 	float** Amatrix=createMatrix(rowA, columnA);
 	completeMatrix(Amatrix, rowA, columnA);
-	puts("\n		A matrix \n");
+	puts("\n		A matrix ");
 	printMatrix(Amatrix, rowA, columnA);
 	
 	//B Matrix
 	float** Bmatrix=createMatrix(rowA, 1);
 	generateB(Amatrix, Bmatrix, rowA, columnA);
-	puts("\n		B matrix \n");
+	puts("\n		B matrix ");
 	printMatrix(Bmatrix, rowA, 1);
 	
 	
 	//Matrix Triangularization
-	puts("\n		TRIANGULARIZATION \n");
+	puts("		TRIANGULARIZATION ");
 	gauss(Amatrix, Bmatrix, rowA);
-	puts("\n		A Matrix \n");
+	puts("\n		A Matrix ");
 	printMatrix(Amatrix, rowA, columnA);
-	puts("\n		B Matrix \n");
+	puts("\n		B Matrix ");
 	printMatrix(Bmatrix, rowA, 1);
 	
 	//Solve the system
 	float** Xmatrix=createMatrix(rowA, 1);
-	puts("\n		SOLVING \n");
+	puts("		SOLVING ");
 	resolution(Amatrix, Bmatrix, Xmatrix, rowA);
-	puts("\n		SOLUTION VECTOR X \n");
+	puts("\n		SOLUTION VECTOR X ");
 	printMatrix(Xmatrix, rowA, 1);
 	
 	//Free
@@ -155,7 +155,7 @@ int main(){
     
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
     
-    printf("\nTemps d'exécution : %f secondes\n", cpu_time_used);
+    printf("\nTemps d'execution : %f secondes\n", cpu_time_used);
 	return 0;
 }
 

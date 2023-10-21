@@ -25,7 +25,7 @@ PRINT A 2D FLOAT MATRIX
 void printMatrix(float **mat, int row, int column){
 	for (int i=0; i<row; i++){
     		for(int j=0; j<column; j++){
-         		printf("%f   ", mat[i][j]);
+         		printf("%.3f   ", mat[i][j]);
     		}
     		printf("\n");
 	}
