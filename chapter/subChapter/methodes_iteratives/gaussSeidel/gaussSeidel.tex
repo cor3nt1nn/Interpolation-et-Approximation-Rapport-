@@ -1,51 +1,51 @@
-\documentclass{report}
-\setlength{\headheight}{24.1638pt}
-%packages
-\usepackage[french]{babel}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{mathtools}
-\usepackage{amssymb}
-\usepackage{hyperref}
-\usepackage{float}
-\usepackage{amsthm}
-\usepackage{listings}
-\usepackage{geometry}
-\usepackage{setspace}
-\usepackage{graphicx}
-\usepackage{fancyhdr}
-\usepackage{subcaption}
-\usepackage{cleveref}
+% \documentclass{report}
+% \setlength{\headheight}{24.1638pt}
+% packages
+% \usepackage[french]{babel}
+% \usepackage[T1]{fontenc}
+% \usepackage[utf8]{inputenc}
+% \usepackage{mathtools}
+% \usepackage{amssymb}
+% \usepackage{hyperref}
+% \usepackage{float}
+% \usepackage{amsthm}
+% \usepackage{listings}
+% \usepackage{geometry}
+% \usepackage{setspace}
+% \usepackage{graphicx}
+% \usepackage{fancyhdr}
+% \usepackage{subcaption}
+% \usepackage{cleveref}
 
-%commands
-\newtheorem{defi}{Définition}
-\renewcommand{\thedefi}{\empty{}}
+% commands
+% \newtheorem{defi}{Définition}
+% \renewcommand{\thedefi}{\empty{}}
 
-\renewcommand\headrulewidth{1pt}
-\newcommand{\crule}[3][c]{%
-    \par\noindent
-    \makebox[\linewidth][#1]{\rule{#2\linewidth}{#3}}}
-\renewcommand{\thechapter}{\Roman{chapter}}
+% \renewcommand\headrulewidth{1pt}
+% \newcommand{\crule}[3][c]{%
+%     \par\noindent
+%     \makebox[\linewidth][#1]{\rule{#2\linewidth}{#3}}}
+% \renewcommand{\thechapter}{\Roman{chapter}}
 
-%Style de page
-\pagestyle{fancy}
-\fancyhead[L]{}
-\fancyhead[C]{}
-\fancyhead[R]{\leftmark}
-\allowdisplaybreaks
-\geometry{hmargin=3cm,vmargin=2.5cm}
+% Style de page
+% \pagestyle{fancy}
+% \fancyhead[L]{}
+% \fancyhead[C]{}
+% \fancyhead[R]{\leftmark}
+% \allowdisplaybreaks
+% \geometry{hmargin=3cm,vmargin=2.5cm}
 
 
-%préambule
-\begin{document}
+% préambule
+% \begin{document}
 
-\lstset{
-  firstnumber=0, 
-  numbers=left,               
-  frame=single,
-  language=C,                                       
-  showstringspaces=false
-}
+% \lstset{
+%   firstnumber=0, 
+%   numbers=left,               
+%   frame=single,
+%   language=C,                                       
+%   showstringspaces=false
+% }
 \section{Méthode de Gauss-Seidel}
 \subsection{Introduction à la méthode de Gauss-Seidel}
 La méthode de Gauss-Seidel est une méthode itérative pour résoudre 
@@ -78,6 +78,7 @@ Pour résoudre un système $Ax=b$, avec $A \in \mathcal{M}_{n}$ et $b\in \mathca
   \item une variable $k$ qui sera notre compteur d'itération.
 \end{itemize}\vspace{6pt}
 \label{algogs}
+
 \begin{lstlisting}[mathescape=true, frame=single, basicstyle=\linespread{1.5}\fontsize{8}{10}\selectfont]
 $x^{(0)}=x_0 \in \mathcal{M}_{n,1}$
 $\varepsilon^{(0)}=\varepsilon \text{ (erreur)}$
@@ -219,6 +220,7 @@ x^{(1)}&=\begin{pmatrix}
 Nous détaillerons dans cette section uniquement les fonctions dites "non-usuelles" qui vont nous servir pour l'implémentation de l'algorithme de Gauss-Seidel. Il s'agit ici de la fonction de mise à jour de notre variable erreur et de la fonction implémentant l'algorithme de Gauss-Seidel.\vspace{8pt}\\
 \textbf{\underline{Fonction \textit{majEpsilon:}}}\vspace{6pt}\\
 La fonction \textbf{majEpsilon} permet de mettre à jour la variable d'erreur $\varepsilon$ lors de l'exécution de notre algorithme. Grâce au vecteur $x^{(k)}$ qui représente la solution actuelle de notre système d'équations, la fonction calcule la différence absolue entre chaque élément $x_i^{(k)}$ et $1$. Cela permet de mesurer à quel point les valeurs actuelles se rapprochent de 1, qui est notre valeur cible pour les solutions convergentes. La fonction conserve le maximum de ces différences absolues en tant que mesure d'erreur afin de mettre à jour notre variable $\varepsilon$. Cela permet de contrôler la précision de l'algorithme et de décider quand il a convergé de manière satisfaisante vers la solution recherchée. La fonction \textbf{majEpsilon} joue donc un rôle dans la détermination du critère d'arrêt de l'algorithme. Voici son implémentation en C:
+
 \begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont]
 float majEpsilon(float** matXk, int row){
   float maxforEps=0;
@@ -234,14 +236,11 @@ float majEpsilon(float** matXk, int row){
 \end{lstlisting}
 \textbf{\underline{Fonction \textit{gaussSeidel:}}}\vspace{6pt}\\
 La fonction \textbf{gaussSeidel} implémente l'algorithme de Gauss-Seidel tel que décrit précédemment dans la section \ref{algogs}. Par la programmation itérative, notre algorithme mettra à jour les solutions actuelles jusqu'à ce que l'erreur minimale définie soit atteinte ou que le nombre maximal d'itérations soit atteint. Voici son implémentation en C:
-\begin{lstlisting}[mathescape=true, language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont]
-  float** gaussSeidel(float **matA, float **matB, int row, int column, int nbIterMax){
-    //CREATING OUR INITIAL VECTOR
-    float **matXk=createMatrix(row, 1);
-    for(int rowX=0; rowX<row; rowX++){
-			matXk[rowX][0]=0;
-    }
 
+\begin{lstlisting}[mathescape=true, language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont]
+  float** gaussSeidel(float **matA, float **matB, float **matXk, int row, int column, 
+                      int nbIterMax)
+  {
     //CREATING OUR SOLUTION VECTOR AT ITERATION k
     float **matXk1=createMatrix(row, 1);
 
@@ -264,15 +263,15 @@ La fonction \textbf{gaussSeidel} implémente l'algorithme de Gauss-Seidel tel qu
                 sumE+=matA[i][j]*matXk1[j][0];
             }
 
-            //CALCULATION OF ELEMENT $X_i^{(k)}$"
+            //CALCULATION OF ELEMENT $X_i^{(k)}$
             matXk1[i][0]=(matB[i][0]-sumF-sumE)/matA[i][i];
 
         }
 
         //UPDATING OUR SOLUTION VECTOR
-        matXk[0][0]=matXk1[0][0];
-        matXk[1][0]=matXk1[1][0];
-        matXk[2][0]=matXk1[2][0];
+        for(int k=0; k<row ; k++){
+            matXk[k][0]=matXk1[k][0];
+        }
 
         //UPDATING OUR ERROR VARIABLE AND ITERATION COUNTER
         epsilon=majEpsilon(matXk, row);
@@ -280,9 +279,306 @@ La fonction \textbf{gaussSeidel} implémente l'algorithme de Gauss-Seidel tel qu
     }
 
     //RETURN THE SOLUTION VECTOR
-    return matXk1;
+    return matXk;
 }
 \end{lstlisting}
 \subsection{Exemples d'exécution}
-\end{document}
+Soient les matrices $A$ données dans le TP et dans l'annexe du document (section \ref{annexe}).
+En résolvant le système $Ax=b$ en question, nous obtenons respectivement les résultats suivants:
+\\
+
+\begin{lstlisting}[caption={$A_1X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
+                  A matrix
+  3.000   0.000   4.000   
+  7.000   4.000   2.000   
+  -1.000   1.000   2.000   
+                  B matrix
+  7.000   
+  13.000   
+  2.000   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  -nan   
+  -nan   
+  -nan   
+  Temps d'execution : 0.000380 secondes
+\end{lstlisting}
+
+\begin{lstlisting}[caption={$A_2X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
+                  A matrix
+  -3.000   3.000   -6.000   
+  -4.000   7.000   8.000   
+  5.000   7.000   -9.000   
+                  B matrix
+  -6.000   
+  11.000   
+  3.000   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  -nan   
+  -nan   
+  -nan   
+  Temps d'execution : 0.000328 secondes
+\end{lstlisting}
+
+\begin{lstlisting}[caption={$A_3X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
+                  A matrix
+  4.000   1.000   1.000   
+  2.000   -9.000   0.000   
+  0.000   -8.000   6.000   
+                  B matrix
+  6.000   
+  -7.000   
+  -2.000   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000   
+  1.000   
+  1.000   
+  Temps d'execution : 0.000257 secondes
+\end{lstlisting}
+
+\begin{lstlisting}[caption={$A_4X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
+                  A matrix
+  7.000   6.000   9.000   
+  4.000   5.000   -4.000   
+  -7.000   -3.000   8.000   
+                  B matrix
+  22.000   
+  5.000   
+  -2.000   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000   
+  1.000   
+  1.000   
+  Temps d'execution : 0.000267 secondes
+\end{lstlisting}
+
+\begin{lstlisting}[caption={$A_5X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
+                  A matrix
+  1.000   0.500   0.250   
+  0.500   1.000   0.000   
+  0.250   0.000   1.000   
+                  B matrix
+  1.750   
+  1.500   
+  1.250   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000   
+  1.000   
+  1.000   
+  Temps d'execution : 0.000286 secondes
+\end{lstlisting}
+
+\begin{lstlisting}[caption={$A_6X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
+                  A matrix
+  1.000   0.500   0.250   0.125   0.062   0.031   
+  0.500   1.000   0.000   0.000   0.000   0.000   
+  0.250   0.000   1.000   0.000   0.000   0.000   
+  0.125   0.000   0.000   1.000   0.000   0.000   
+  0.062   0.000   0.000   0.000   1.000   0.000   
+  0.031   0.000   0.000   0.000   0.000   1.000   
+                  B matrix
+  1.969   
+  1.500   
+  1.250   
+  1.125   
+  1.062   
+  1.031   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  Temps d'execution : 0.000305 secondes
+\end{lstlisting}
+
+\begin{lstlisting}[caption={$A_7X=B$} results, basicstyle=\fontsize{5}{8}\selectfont]
+                  A matrix
+  1.000   0.500   0.250   0.125   0.062   0.031   0.016   0.008   
+  0.500   1.000   0.000   0.000   0.000   0.000   0.000   0.000   
+  0.250   0.000   1.000   0.000   0.000   0.000   0.000   0.000   
+  0.125   0.000   0.000   1.000   0.000   0.000   0.000   0.000   
+  0.062   0.000   0.000   0.000   1.000   0.000   0.000   0.000   
+  0.031   0.000   0.000   0.000   0.000   1.000   0.000   0.000   
+  0.016   0.000   0.000   0.000   0.000   0.000   1.000   0.000   
+  0.008   0.000   0.000   0.000   0.000   0.000   0.000   1.000   
+                  B matrix
+  1.992   
+  1.500   
+  1.250   
+  1.125   
+  1.062   
+  1.031   
+  1.016   
+  1.008   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  Temps d'execution : 0.000369 secondes
+\end{lstlisting}
+
+\begin{lstlisting}[caption={$A_8X=B$} results, basicstyle=\fontsize{5}{8}\selectfont]
+                  A matrix
+  1.000   0.500   0.250   0.125   0.062   0.031   0.016   0.008   0.004   0.002   
+  0.500   1.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000   
+  0.250   0.000   1.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000   
+  0.125   0.000   0.000   1.000   0.000   0.000   0.000   0.000   0.000   0.000   
+  0.062   0.000   0.000   0.000   1.000   0.000   0.000   0.000   0.000   0.000   
+  0.031   0.000   0.000   0.000   0.000   1.000   0.000   0.000   0.000   0.000   
+  0.016   0.000   0.000   0.000   0.000   0.000   1.000   0.000   0.000   0.000   
+  0.008   0.000   0.000   0.000   0.000   0.000   0.000   1.000   0.000   0.000   
+  0.004   0.000   0.000   0.000   0.000   0.000   0.000   0.000   1.000   0.000   
+  0.002   0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000   1.000   
+                  B matrix
+  1.998   
+  1.500   
+  1.250   
+  1.125   
+  1.062   
+  1.031   
+  1.016   
+  1.008   
+  1.004   
+  1.002   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  Temps d'execution : 0.000351 secondes
+\end{lstlisting}
+
+\begin{lstlisting}[caption={$A_9X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
+                  A matrix
+  3.000   -1.000   0.000   
+  -2.000   3.000   -1.000   
+  0.000   -2.000   3.000   
+                  B matrix
+  2.000   
+  0.000   
+  1.000   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000   
+  1.000   
+  1.000   
+  Temps d'execution : 0.000274 secondes
+\end{lstlisting}
+
+\begin{lstlisting}[caption={$A_10X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
+                  A matrix
+  3.000   -1.000   0.000   0.000   0.000   0.000   
+  -2.000   3.000   -1.000   0.000   0.000   0.000   
+  0.000   -2.000   3.000   -1.000   0.000   0.000   
+  0.000   0.000   -2.000   3.000   -1.000   0.000   
+  0.000   0.000   0.000   -2.000   3.000   -1.000   
+  0.000   0.000   0.000   0.000   -2.000   3.000   
+                  B matrix
+  2.000   
+  0.000   
+  0.000   
+  0.000   
+  0.000   
+  1.000   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  Temps d'execution : 0.000315 secondes
+\end{lstlisting}
+
+\begin{lstlisting}[caption={$A_11X=B$} results, basicstyle=\fontsize{5}{8}\selectfont]
+                  A matrix
+  3.000   -1.000   0.000   0.000   0.000   0.000   0.000   0.000   
+  -2.000   3.000   -1.000   0.000   0.000   0.000   0.000   0.000   
+  0.000   -2.000   3.000   -1.000   0.000   0.000   0.000   0.000   
+  0.000   0.000   -2.000   3.000   -1.000   0.000   0.000   0.000   
+  0.000   0.000   0.000   -2.000   3.000   -1.000   0.000   0.000   
+  0.000   0.000   0.000   0.000   -2.000   3.000   -1.000   0.000   
+  0.000   0.000   0.000   0.000   0.000   -2.000   3.000   -1.000   
+  0.000   0.000   0.000   0.000   0.000   0.000   -2.000   3.000   
+                  B matrix
+  2.000   
+  0.000   
+  0.000   
+  0.000   
+  0.000   
+  0.000   
+  0.000   
+  1.000   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  Temps d'execution : 0.000341 secondes
+\end{lstlisting}
+
+\begin{lstlisting}[caption={$A_12X=B$} results, basicstyle=\fontsize{5}{8}\selectfont]
+                  A matrix
+  3.000   -1.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000   
+  -2.000   3.000   -1.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000   
+  0.000   -2.000   3.000   -1.000   0.000   0.000   0.000   0.000   0.000   0.000   
+  0.000   0.000   -2.000   3.000   -1.000   0.000   0.000   0.000   0.000   0.000   
+  0.000   0.000   0.000   -2.000   3.000   -1.000   0.000   0.000   0.000   0.000   
+  0.000   0.000   0.000   0.000   -2.000   3.000   -1.000   0.000   0.000   0.000   
+  0.000   0.000   0.000   0.000   0.000   -2.000   3.000   -1.000   0.000   0.000   
+  0.000   0.000   0.000   0.000   0.000   0.000   -2.000   3.000   -1.000   0.000   
+  0.000   0.000   0.000   0.000   0.000   0.000   0.000   -2.000   3.000   -1.000   
+  0.000   0.000   0.000   0.000   0.000   0.000   0.000   0.000   -2.000   3.000   
+                  B matrix
+  2.000   
+  0.000   
+  0.000   
+  0.000   
+  0.000   
+  0.000   
+  0.000   
+  0.000   
+  0.000   
+  1.000   
+                  SOLVING
+                  SOLUTION VECTOR X 
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  1.000   
+  Temps d'execution : 0.000479 secondes
+\end{lstlisting}
+% \end{document}
 
