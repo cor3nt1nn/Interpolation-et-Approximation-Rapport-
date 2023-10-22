@@ -1,0 +1,8 @@
+1.000000 0.500000 0.064815 0.008402 0.001089 0.000141 0.000018 0.000002 
+8
+A matrix dimensions: 
+Enter coefficient for 0x560c5f6d6300[0][0]Enter coefficient for 0x560c5f6d6300[0][1]Enter coefficient for 0x560c5f6d6300[0][2]Enter coefficient for 0x560c5f6d6300[1][0]Enter coefficient for 0x560c5f6d6300[1][1]Enter coefficient for 0x560c5f6d6300[1][2]Enter coefficient for 0x560c5f6d6300[2][0]Enter coefficient for 0x560c5f6d6300[2][1]Enter coefficient for 0x560c5f6d6300[2][2]
+ ===== CONVERGENCE PREDICTION: may not conv =====
+PRINTING VECTOR FROM: 0x560c5f6d62e0 LOCATION :
+1.000000 1.000000 1.000000
+EPSILON CALCULATED 8:

@@ -12,13 +12,18 @@ void printMatrix(float **matrix, int m, int p) {
     puts("");
   }
 }
+/*
+ * PRINT VECTOR WITH GOOD FORMAT:
+ */
 void printVect(float *V, int m) {
   printf("PRINTING VECTOR FROM: %p LOCATION :\n", V);
   for (int i = 0; i < m; i++) {
     (i <= m - 2) ? printf("%f ", V[i]) : printf("%f\n", V[i]);
   }
 }
-
+/*
+ * CALCULATE THE NORM OF A VECTOR
+ */
 double norm(float *b, int n) {
   double sum = 0;
   for (int i = 0; i < n; i++) {
@@ -27,6 +32,9 @@ double norm(float *b, int n) {
   sum = sqrt((double)sum);
   return sum;
 }
+/*
+ * ALLOCATE MEMORY FOR VECTORS
+ */
 float *buildVect(int n) {
   float *V = calloc(n, sizeof *V);
   return V;
@@ -70,6 +78,9 @@ void freeAll(float **T, int m) {
   }
   free(T);
 }
+/*
+ * CREATE A VECTOR THAT IS THE RESULT OF V1-V2
+ */
 float *subVect(float *V1, float *V2, int m) {
   float *V3 = buildVect(m);
   for (int i = 0; i < m; i++) {
@@ -77,8 +88,15 @@ float *subVect(float *V1, float *V2, int m) {
   }
   return V3;
 }
+/*
+ * ABSOLUTE VALUE FOR FLOAT
+ */
 float Fabs(float a) { return (a > 0) ? a : -a; }
 
+/*
+ * CALULATE A PART OF THE FORMULA THAT GIVES x_i^(k)
+ * CREATED FOR LISIBILITY
+ */
 float jacobiSum(float **A, float *V, int m, int i) {
   float s = 0;
   for (int j = 0; j < m; j++) {
@@ -87,6 +105,10 @@ float jacobiSum(float **A, float *V, int m, int i) {
   }
   return s;
 }
+/*
+ * CALCULATION FOR ERROR BETWEEN TWO ITERATIONS
+ * IT FOLLOWS THE FORMULA GIVEN IN THE SHEET
+ */
 float epsi(float *V, float *S, int n) {
   float max = Fabs(V[0] - S[0]);
   for (int i = 1; i < n; i++) {
@@ -109,6 +131,9 @@ float **multiplication(float **M1, float **M2, int m, int q) {
   }
   return R;
 }
+/*
+ * IMPLEMENTATION OF '.' OPERATOR FOR MATRIX AND VECTORS
+ */
 float *multiplicationMV(float **M1, float *M2, int m) {
   float *R = buildVect(m);
   for (int i = 0; i < m; i++) {
@@ -118,10 +143,17 @@ float *multiplicationMV(float **M1, float *M2, int m) {
   }
   return R;
 }
+/*
+ * INITIATE A VECTOR OF N ELEMENTS TO 1
+ */
 void fillOne(float *V, int m) {
   for (int i = 0; i < m; i++)
     V[i] = 1;
 }
+/*
+ * DETERMINE IF JACOBI LEADS TO RESULTS BY CALCULATED IF A MATRIX A IS STRICTLY
+ * DOMINANT DIAGONAL MATRIX
+ */
 int conv(float **A, int m) {
   float sl = 0;
   for (int i = 0; i < m; i++) {

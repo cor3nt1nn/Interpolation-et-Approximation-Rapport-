@@ -30,18 +30,29 @@ int main(int argc, char *argv[]) {
   (void)argc;
   puts("A matrix dimensions: ");
   scanf("%d%d", &m, &p);
-  float *ones = buildVect(m);
-  float *X = buildVect(m);
+  float *ones =
+      buildVect(m); // build the vector of m dimensions that is composed of 1
+  float *X = buildVect(m); // Build the X_0 vector, already init to 0 by the
+                           // calloc is source file
   fillOne(ones, m);
   float **A = allocate(m, p);
   fillM(m, p, A);
-  float *b = multiplicationMV(A, ones, m);
-  puts("inputs for max Error and max Iteration");
-  // scanf("%f%d", &minErr, &maxIter);
+  float *b =
+      multiplicationMV(A, ones, m); // FIND B matrix by using the A matrix and
+                                    // the matrix that is composed only of ones
+  // puts("inputs for max Error and max Iteration");
+  //  scanf("%f%d", &minErr, &maxIter);
   printf("\n ===== CONVERGENCE PREDICTION: %s =====\n",
-         (conv(A, m) == 1) ? ("conv") : ("may not conv"));
-  int count = jacobi(A, X, b, ones, m, atof(argv[1]), atoi(argv[2]));
-  fprintf(stderr, "\n%d", count);
+         (conv(A, m) == 1)
+             ? ("conv")
+             : ("may not conv")); // for user comfort to have a prediction of
+                                  // the result validity
+  int count =
+      jacobi(A, X, b, ones, m, atof(argv[1]),
+             atoi(argv[2])); // call jaocobi and count the number of iterations
+                             // done and used minErr and bound as program params
+  fprintf(stderr, "\n%d\n", count); // in stderr to produce some graphs
+  printVect(X, m);
   printf("EPSILON CALCULATED %d:", count);
   freeAll(A, m);
   free(X);
