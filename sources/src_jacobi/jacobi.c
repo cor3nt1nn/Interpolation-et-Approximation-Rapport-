@@ -14,6 +14,7 @@ int jacobi(float **A, float *vector, float *b, float *S, int n, float minErr,
   float epsilon = epsi(S, vector, n);
   int k = 0;
   while (k < bound && epsilon >= minErr) {
+    fprintf(stderr, "%0.6f ", epsilon);
     // printf("EPSILON : %f\n", epsilon);
     for (int i = 0; i < n; i++) {
       vector[i] = (1 / A[i][i]) * (b[i] - jacobiSum(A, vector, n, i));
@@ -40,8 +41,7 @@ int main(int argc, char *argv[]) {
   printf("\n ===== CONVERGENCE PREDICTION: %s =====\n",
          (conv(A, m) == 1) ? ("conv") : ("may not conv"));
   int count = jacobi(A, X, b, ones, m, atof(argv[1]), atoi(argv[2]));
-  printMatrix(A, m, m);
-  printVect(X, m);
+  fprintf(stderr, "\n%d", count);
   printf("EPSILON CALCULATED %d:", count);
   freeAll(A, m);
   free(X);
