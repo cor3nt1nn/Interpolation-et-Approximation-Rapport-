@@ -172,6 +172,194 @@ et
 Pour l'implémentation de cette méthode, nous utiliserons $\epsilon$ comme suit: \\
 $\epsilon^{(k)} = p^k = \text{Max}_{i=1,\ldots, n} \vert \bar{x_i} -\tilde{x_i}^k \vert $ \\
 Où $\bar{x_i}$ est les résultat attendu et $\tilde{x_i}^k$ est l'approximation trouvée à l'étape $k$. \\
-De plus on utilisera aussi une limite d'occurrence, pour pouvoir gérer les matrices où \textbf{Jacobi} diverge.//
+De plus on utilisera aussi une limite d'occurrence, pour pouvoir gérer les matrices où \textbf{Jacobi} diverge.\\
 En l'occurrence on se fixera un $\epsilon = 10^{-6}$ et un nombre d'itération maximum fixé à $1000$
+\subsection{Code}
+\textit{On ne détaillera ici seulement les fonctions dites "non triviales" c'est-à-dire les fonctions étant en lien directe avec l'algorithme décrit.\\De plus chaque fonction présentée sera dépouillée de toute fonction d'affichage permettant de produire des chiffres liés à l'utilisation du programme (pour une question de lisibilité}
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont,caption=jacobi.c]
+int jacobi(float **A, float *vector, float *b, float *S, int n, float minErr,int bound) {
+  float epsilon = epsi(S, vector, n);
+  int k = 0;
+  while (k < bound && epsilon >= minErr) {
+    for (int i = 0; i < n; i++) {
+      vector[i] = (1 / A[i][i]) * (b[i] - jacobiSum(A, vector, n, i));
+    }
+    epsilon = epsi(vector, S, n);
+    k++;
+  }
+  return k;
+}
+\end{lstlisting}
+\textbf{Commentaires:} Nous remarquerons que j'implémentation de l'algorithme de Jacobi est similaire à ce que a été présenté ultérieurement. Pour des questions de lisibilité, $\epsilon^{(k)}$ est calculée par la fonction \textit{epsi()}, de même pour \textbf{jacobiSum()}, le calcul a été séparé afin de faciliter la comprehension du programme.
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont,caption=jacobiSum() function in "source.h"]
+float jacobiSum(float **A, float *V, int m, int i) {
+  float s = 0;
+  for (int j = 0; j < m; j++) {
+    if (j != i)
+      s += A[i][j] * V[j];
+  }
+  return s;
+}
+\end{lstlisting}
+\textbf{Commentaire:} Permet de calculer de façon lisible est clair ceci: \\
+\begin{center}
+$\sum \limits_{j \neq i} a_{ij}x_j^{(k)}, i=1,\ldots k$
+\end{center}
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont,caption=epsi() function in "source.h"]
+float epsi(float *V, float *S, int n) {
+  float max = Fabs(V[0] - S[0]);
+  for (int i = 1; i < n; i++) {
+    if (Fabs(S[i] - V[i]) > max)
+      max = Fabs(S[i] - V[i]);
+  }
+  return max;
+}
+\end{lstlisting}
+\textbf{Commentaires:} Utilise la fonction \textit{Fabs()} que nous avons implémenter, elle renvoie la valeur absolue d'un nombre flottant.\\
+Cette fonction \textit{epsi()} permet donc de calculer l'erreur entre deux itération de la façon suivante: \\
+\begin{center}
+$\epsilon^{(k)} = \text{Max}_{i=1,\ldots, n} \vert \bar{x_i} -\tilde{x_i}^k \vert $ \\
+\end{center}
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont,caption=conv() function in "source.h"]
+int conv(float **A, int m) {
+  float sl = 0;
+  for (int i = 0; i < m; i++) {
+    for (int j = 0; j < m; j++) {
+      if (i != j)
+        sl += fabs(A[i][j]);
+    }
+    if (A[i][i] - sl <= 0)
+      return 0;
+  }
+  return 1;
+}
+\end{lstlisting}
+\textbf{Commentaire} \textit{conv()} est une fonction utilitaire permettant d'effectuer une prediction sur la convergeance potentielle d'une matrice par jacobi.\\
+Pour cela on vérifie si la matrice sur laquelle on effectue jacobi est à diagonale strictemennt dominante. \\
+Ce qui se vérifie par cette formule: \\
+\begin{center}
+$\forall i, \vert a_{ii} \vert > \sum \limits_{j\neq i} \vert a_{ij} \vert$
+\end{center}
+\subsection{Entrées / Sorties}
+\subsubsection{Entrées}
+Le programme prend en entrée 2 paramètres soient 
+\begin{enumerate}
+\item minErr, ou l'erreur minimale tolérée
+\item bounds, qui désigne la limite d'occurrence du programme (en cas de divergeance)
+\end{enumerate}
+L'utilisateur peut ensuite décider de remplir manuellement sa matrice où de rediriger le flux d'un fichier comme suit:
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont,caption=A4.txt]
+3 3
+7 6 9
+4 5 -4
+-7 -3 8 
+\end{lstlisting}
+Avec sur la première ligne: les dimensions de la matrice suivit, sur les ligne suivantes, des coefficients de la matrice
+\subsection{Sorties}
+Le flux d'erreur sera réservé afin de produire des données engendrant des graphiques (des données formatées). Il s'agit de l'énumération de tout les $\epsilon$ calculés suivit du nombre d'itération. \\
+Sur les autre lignes seront inscrit des messages facilitant la prise en main du programme pour l'utilisateur. \\
+Il figuera ensuite la prédiction quant à la convergence de la méthode.\\
+Enfin la dernière lignes représentera le nombre de $\epsilon$ calculés. \\
+\subsection{Exécution}
+Voici l'exécution sur les 12 matrices de la méthode de jacobi.\\
+\textit{La redirection de flux de sortie du programme est la suivante: >}
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont,caption=Execution with A1 matrix]
+A matrix dimensions: 
+Enter coefficient for 0x55bcc971d300[0][0]Enter coefficient for 0x55bcc971d300[0][1]Enter coefficient for 0x55bcc971d300[0][2]Enter coefficient for 0x55bcc971d300[1][0]Enter coefficient for 0x55bcc971d300[1][1]Enter coefficient for 0x55bcc971d300[1][2]Enter coefficient for 0x55bcc971d300[2][0]Enter coefficient for 0x55bcc971d300[2][1]Enter coefficient for 0x55bcc971d300[2][2]
+ ===== CONVERGENCE PREDICTION: may not conv =====
+PRINTING VECTOR FROM: 0x55bcc971d2e0 LOCATION :
+-nan -nan -nan
+EPSILON CALCULATED 191
+\end{lstlisting}
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont,caption=Execution with A2 matrix]
+A matrix dimensions: 
+Enter coefficient for 0x5618a8a9b300[0][0]Enter coefficient for 0x5618a8a9b300[0][1]Enter coefficient for 0x5618a8a9b300[0][2]Enter coefficient for 0x5618a8a9b300[1][0]Enter coefficient for 0x5618a8a9b300[1][1]Enter coefficient for 0x5618a8a9b300[1][2]Enter coefficient for 0x5618a8a9b300[2][0]Enter coefficient for 0x5618a8a9b300[2][1]Enter coefficient for 0x5618a8a9b300[2][2]
+ ===== CONVERGENCE PREDICTION: may not conv =====
+PRINTING VECTOR FROM: 0x5618a8a9b2e0 LOCATION :
+-nan -nan -nan
+EPSILON CALCULATED 127
+\end{lstlisting}
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont,caption=Execution with A3 matrix]
+A matrix dimensions: 
+Enter coefficient for 0x558cd60e7300[0][0]Enter coefficient for 0x558cd60e7300[0][1]Enter coefficient for 0x558cd60e7300[0][2]Enter coefficient for 0x558cd60e7300[1][0]Enter coefficient for 0x558cd60e7300[1][1]Enter coefficient for 0x558cd60e7300[1][2]Enter coefficient for 0x558cd60e7300[2][0]Enter coefficient for 0x558cd60e7300[2][1]Enter coefficient for 0x558cd60e7300[2][2]
+ ===== CONVERGENCE PREDICTION: may not conv =====
+PRINTING VECTOR FROM: 0x558cd60e72e0 LOCATION :
+1.000000 1.000000 1.000000
+EPSILON CALCULATED 8
+\end{lstlisting}
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont,caption=Execution with A4 matrix]
+A matrix dimensions: 
+Enter coefficient for 0x5634c961e300[0][0]Enter coefficient for 0x5634c961e300[0][1]Enter coefficient for 0x5634c961e300[0][2]Enter coefficient for 0x5634c961e300[1][0]Enter coefficient for 0x5634c961e300[1][1]Enter coefficient for 0x5634c961e300[1][2]Enter coefficient for 0x5634c961e300[2][0]Enter coefficient for 0x5634c961e300[2][1]Enter coefficient for 0x5634c961e300[2][2]
+ ===== CONVERGENCE PREDICTION: may not conv =====
+PRINTING VECTOR FROM: 0x5634c961e2e0 LOCATION :
+1.000000 1.000000 1.000000
+EPSILON CALCULATED 58
+\end{lstlisting}
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont,caption=Execution with A5 dimensions: 3x3]
+A matrix dimensions: 
+Enter coefficient for 0x5617a96a0300[0][0]Enter coefficient for 0x5617a96a0300[0][1]Enter coefficient for 0x5617a96a0300[0][2]Enter coefficient for 0x5617a96a0300[1][0]Enter coefficient for 0x5617a96a0300[1][1]Enter coefficient for 0x5617a96a0300[1][2]Enter coefficient for 0x5617a96a0300[2][0]Enter coefficient for 0x5617a96a0300[2][1]Enter coefficient for 0x5617a96a0300[2][2]
+ ===== CONVERGENCE PREDICTION: may not conv =====
+PRINTING VECTOR FROM: 0x5617a96a02e0 LOCATION :
+1.000001 1.000000 1.000000
+EPSILON CALCULATED 13 
+\end{lstlisting}
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont,caption=Execution with A5 dimensions: 6x6]
+A matrix dimensions: 
+Enter coefficient for 0x560e22b20300[0][0]Enter coefficient for 0x560e22b20300[0][1]Enter coefficient for 0x560e22b20300[0][2]Enter coefficient for 0x560e22b20300[0][3]Enter coefficient for 0x560e22b20300[0][4]Enter coefficient for 0x560e22b20300[0][5]Enter coefficient for 0x560e22b20300[1][0]Enter coefficient for 0x560e22b20300[1][1]Enter coefficient for 0x560e22b20300[1][2]Enter coefficient for 0x560e22b20300[1][3]Enter coefficient for 0x560e22b20300[1][4]Enter coefficient for 0x560e22b20300[1][5]Enter coefficient for 0x560e22b20300[2][0]Enter coefficient for 0x560e22b20300[2][1]Enter coefficient for 0x560e22b20300[2][2]Enter coefficient for 0x560e22b20300[2][3]Enter coefficient for 0x560e22b20300[2][4]Enter coefficient for 0x560e22b20300[2][5]Enter coefficient for 0x560e22b20300[3][0]Enter coefficient for 0x560e22b20300[3][1]Enter coefficient for 0x560e22b20300[3][2]Enter coefficient for 0x560e22b20300[3][3]Enter coefficient for 0x560e22b20300[3][4]Enter coefficient for 0x560e22b20300[3][5]Enter coefficient for 0x560e22b20300[4][0]Enter coefficient for 0x560e22b20300[4][1]Enter coefficient for 0x560e22b20300[4][2]Enter coefficient for 0x560e22b20300[4][3]Enter coefficient for 0x560e22b20300[4][4]Enter coefficient for 0x560e22b20300[4][5]Enter coefficient for 0x560e22b20300[5][0]Enter coefficient for 0x560e22b20300[5][1]Enter coefficient for 0x560e22b20300[5][2]Enter coefficient for 0x560e22b20300[5][3]Enter coefficient for 0x560e22b20300[5][4]Enter coefficient for 0x560e22b20300[5][5]
+ ===== CONVERGENCE PREDICTION: may not conv =====
+PRINTING VECTOR FROM: 0x560e22b202e0 LOCATION :
+1.000001 1.000000 1.000000 1.000000 1.000000 1.000000
+EPSILON CALCULATED 14  
+\end{lstlisting}
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont,caption=Execution with A5 dimensions: 8x8]
+A matrix dimensions: 
+Enter coefficient for 0x558ffc992320[0][0]Enter coefficient for 0x558ffc992320[0][1]Enter coefficient for 0x558ffc992320[0][2]Enter coefficient for 0x558ffc992320[0][3]Enter coefficient for 0x558ffc992320[0][4]Enter coefficient for 0x558ffc992320[0][5]Enter coefficient for 0x558ffc992320[0][6]Enter coefficient for 0x558ffc992320[0][7]Enter coefficient for 0x558ffc992320[1][0]Enter coefficient for 0x558ffc992320[1][1]Enter coefficient for 0x558ffc992320[1][2]Enter coefficient for 0x558ffc992320[1][3]Enter coefficient for 0x558ffc992320[1][4]Enter coefficient for 0x558ffc992320[1][5]Enter coefficient for 0x558ffc992320[1][6]Enter coefficient for 0x558ffc992320[1][7]Enter coefficient for 0x558ffc992320[2][0]Enter coefficient for 0x558ffc992320[2][1]Enter coefficient for 0x558ffc992320[2][2]Enter coefficient for 0x558ffc992320[2][3]Enter coefficient for 0x558ffc992320[2][4]Enter coefficient for 0x558ffc992320[2][5]Enter coefficient for 0x558ffc992320[2][6]Enter coefficient for 0x558ffc992320[2][7]Enter coefficient for 0x558ffc992320[3][0]Enter coefficient for 0x558ffc992320[3][1]Enter coefficient for 0x558ffc992320[3][2]Enter coefficient for 0x558ffc992320[3][3]Enter coefficient for 0x558ffc992320[3][4]Enter coefficient for 0x558ffc992320[3][5]Enter coefficient for 0x558ffc992320[3][6]Enter coefficient for 0x558ffc992320[3][7]Enter coefficient for 0x558ffc992320[4][0]Enter coefficient for 0x558ffc992320[4][1]Enter coefficient for 0x558ffc992320[4][2]Enter coefficient for 0x558ffc992320[4][3]Enter coefficient for 0x558ffc992320[4][4]Enter coefficient for 0x558ffc992320[4][5]Enter coefficient for 0x558ffc992320[4][6]Enter coefficient for 0x558ffc992320[4][7]Enter coefficient for 0x558ffc992320[5][0]Enter coefficient for 0x558ffc992320[5][1]Enter coefficient for 0x558ffc992320[5][2]Enter coefficient for 0x558ffc992320[5][3]Enter coefficient for 0x558ffc992320[5][4]Enter coefficient for 0x558ffc992320[5][5]Enter coefficient for 0x558ffc992320[5][6]Enter coefficient for 0x558ffc992320[5][7]Enter coefficient for 0x558ffc992320[6][0]Enter coefficient for 0x558ffc992320[6][1]Enter coefficient for 0x558ffc992320[6][2]Enter coefficient for 0x558ffc992320[6][3]Enter coefficient for 0x558ffc992320[6][4]Enter coefficient for 0x558ffc992320[6][5]Enter coefficient for 0x558ffc992320[6][6]Enter coefficient for 0x558ffc992320[6][7]Enter coefficient for 0x558ffc992320[7][0]Enter coefficient for 0x558ffc992320[7][1]Enter coefficient for 0x558ffc992320[7][2]Enter coefficient for 0x558ffc992320[7][3]Enter coefficient for 0x558ffc992320[7][4]Enter coefficient for 0x558ffc992320[7][5]Enter coefficient for 0x558ffc992320[7][6]Enter coefficient for 0x558ffc992320[7][7]
+ ===== CONVERGENCE PREDICTION: may not conv =====
+PRINTING VECTOR FROM: 0x558ffc9922f0 LOCATION :
+1.000001 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000
+EPSILON CALCULATED 14:       
+\end{lstlisting}
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont,caption=Execution with A5 dimensions: 10x10]
+A matrix dimensions: 
+Enter coefficient for 0x5625d23be320[0][0]Enter coefficient for 0x5625d23be320[0][1]Enter coefficient for 0x5625d23be320[0][2]Enter coefficient for 0x5625d23be320[0][3]Enter coefficient for 0x5625d23be320[0][4]Enter coefficient for 0x5625d23be320[0][5]Enter coefficient for 0x5625d23be320[0][6]Enter coefficient for 0x5625d23be320[0][7]Enter coefficient for 0x5625d23be320[0][8]Enter coefficient for 0x5625d23be320[0][9]Enter coefficient for 0x5625d23be320[1][0]Enter coefficient for 0x5625d23be320[1][1]Enter coefficient for 0x5625d23be320[1][2]Enter coefficient for 0x5625d23be320[1][3]Enter coefficient for 0x5625d23be320[1][4]Enter coefficient for 0x5625d23be320[1][5]Enter coefficient for 0x5625d23be320[1][6]Enter coefficient for 0x5625d23be320[1][7]Enter coefficient for 0x5625d23be320[1][8]Enter coefficient for 0x5625d23be320[1][9]Enter coefficient for 0x5625d23be320[2][0]Enter coefficient for 0x5625d23be320[2][1]Enter coefficient for 0x5625d23be320[2][2]Enter coefficient for 0x5625d23be320[2][3]Enter coefficient for 0x5625d23be320[2][4]Enter coefficient for 0x5625d23be320[2][5]Enter coefficient for 0x5625d23be320[2][6]Enter coefficient for 0x5625d23be320[2][7]Enter coefficient for 0x5625d23be320[2][8]Enter coefficient for 0x5625d23be320[2][9]Enter coefficient for 0x5625d23be320[3][0]Enter coefficient for 0x5625d23be320[3][1]Enter coefficient for 0x5625d23be320[3][2]Enter coefficient for 0x5625d23be320[3][3]Enter coefficient for 0x5625d23be320[3][4]Enter coefficient for 0x5625d23be320[3][5]Enter coefficient for 0x5625d23be320[3][6]Enter coefficient for 0x5625d23be320[3][7]Enter coefficient for 0x5625d23be320[3][8]Enter coefficient for 0x5625d23be320[3][9]Enter coefficient for 0x5625d23be320[4][0]Enter coefficient for 0x5625d23be320[4][1]Enter coefficient for 0x5625d23be320[4][2]Enter coefficient for 0x5625d23be320[4][3]Enter coefficient for 0x5625d23be320[4][4]Enter coefficient for 0x5625d23be320[4][5]Enter coefficient for 0x5625d23be320[4][6]Enter coefficient for 0x5625d23be320[4][7]Enter coefficient for 0x5625d23be320[4][8]Enter coefficient for 0x5625d23be320[4][9]Enter coefficient for 0x5625d23be320[5][0]Enter coefficient for 0x5625d23be320[5][1]Enter coefficient for 0x5625d23be320[5][2]Enter coefficient for 0x5625d23be320[5][3]Enter coefficient for 0x5625d23be320[5][4]Enter coefficient for 0x5625d23be320[5][5]Enter coefficient for 0x5625d23be320[5][6]Enter coefficient for 0x5625d23be320[5][7]Enter coefficient for 0x5625d23be320[5][8]Enter coefficient for 0x5625d23be320[5][9]Enter coefficient for 0x5625d23be320[6][0]Enter coefficient for 0x5625d23be320[6][1]Enter coefficient for 0x5625d23be320[6][2]Enter coefficient for 0x5625d23be320[6][3]Enter coefficient for 0x5625d23be320[6][4]Enter coefficient for 0x5625d23be320[6][5]Enter coefficient for 0x5625d23be320[6][6]Enter coefficient for 0x5625d23be320[6][7]Enter coefficient for 0x5625d23be320[6][8]Enter coefficient for 0x5625d23be320[6][9]Enter coefficient for 0x5625d23be320[7][0]Enter coefficient for 0x5625d23be320[7][1]Enter coefficient for 0x5625d23be320[7][2]Enter coefficient for 0x5625d23be320[7][3]Enter coefficient for 0x5625d23be320[7][4]Enter coefficient for 0x5625d23be320[7][5]Enter coefficient for 0x5625d23be320[7][6]Enter coefficient for 0x5625d23be320[7][7]Enter coefficient for 0x5625d23be320[7][8]Enter coefficient for 0x5625d23be320[7][9]Enter coefficient for 0x5625d23be320[8][0]Enter coefficient for 0x5625d23be320[8][1]Enter coefficient for 0x5625d23be320[8][2]Enter coefficient for 0x5625d23be320[8][3]Enter coefficient for 0x5625d23be320[8][4]Enter coefficient for 0x5625d23be320[8][5]Enter coefficient for 0x5625d23be320[8][6]Enter coefficient for 0x5625d23be320[8][7]Enter coefficient for 0x5625d23be320[8][8]Enter coefficient for 0x5625d23be320[8][9]Enter coefficient for 0x5625d23be320[9][0]Enter coefficient for 0x5625d23be320[9][1]Enter coefficient for 0x5625d23be320[9][2]Enter coefficient for 0x5625d23be320[9][3]Enter coefficient for 0x5625d23be320[9][4]Enter coefficient for 0x5625d23be320[9][5]Enter coefficient for 0x5625d23be320[9][6]Enter coefficient for 0x5625d23be320[9][7]Enter coefficient for 0x5625d23be320[9][8]Enter coefficient for 0x5625d23be320[9][9]
+ ===== CONVERGENCE PREDICTION: may not conv =====
+PRINTING VECTOR FROM: 0x5625d23be2f0 LOCATION :
+1.000001 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000 1.000000
+EPSILON CALCULATED 14
+\end{lstlisting}
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont,caption=Execution with A6 dimensions: 3x3]
+A matrix dimensions: 
+Enter coefficient for 0x55b6d687c300[0][0]Enter coefficient for 0x55b6d687c300[0][1]Enter coefficient for 0x55b6d687c300[0][2]Enter coefficient for 0x55b6d687c300[1][0]Enter coefficient for 0x55b6d687c300[1][1]Enter coefficient for 0x55b6d687c300[1][2]Enter coefficient for 0x55b6d687c300[2][0]Enter coefficient for 0x55b6d687c300[2][1]Enter coefficient for 0x55b6d687c300[2][2]
+ ===== CONVERGENCE PREDICTION: may not conv =====
+PRINTING VECTOR FROM: 0x55b6d687c2e0 LOCATION :
+1.000000 1.000000 1.000000
+EPSILON CALCULATED 18
+\end{lstlisting}
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont,caption=Execution with A6 dimensions: 6x6]
+A matrix dimensions: 
+Enter coefficient for 0x55b7a7e47300[0][0]Enter coefficient for 0x55b7a7e47300[0][1]Enter coefficient for 0x55b7a7e47300[0][2]Enter coefficient for 0x55b7a7e47300[0][3]Enter coefficient for 0x55b7a7e47300[0][4]Enter coefficient for 0x55b7a7e47300[0][5]Enter coefficient for 0x55b7a7e47300[1][0]Enter coefficient for 0x55b7a7e47300[1][1]Enter coefficient for 0x55b7a7e47300[1][2]Enter coefficient for 0x55b7a7e47300[1][3]Enter coefficient for 0x55b7a7e47300[1][4]Enter coefficient for 0x55b7a7e47300[1][5]Enter coefficient for 0x55b7a7e47300[2][0]Enter coefficient for 0x55b7a7e47300[2][1]Enter coefficient for 0x55b7a7e47300[2][2]Enter coefficient for 0x55b7a7e47300[2][3]Enter coefficient for 0x55b7a7e47300[2][4]Enter coefficient for 0x55b7a7e47300[2][5]Enter coefficient for 0x55b7a7e47300[3][0]Enter coefficient for 0x55b7a7e47300[3][1]Enter coefficient for 0x55b7a7e47300[3][2]Enter coefficient for 0x55b7a7e47300[3][3]Enter coefficient for 0x55b7a7e47300[3][4]Enter coefficient for 0x55b7a7e47300[3][5]Enter coefficient for 0x55b7a7e47300[4][0]Enter coefficient for 0x55b7a7e47300[4][1]Enter coefficient for 0x55b7a7e47300[4][2]Enter coefficient for 0x55b7a7e47300[4][3]Enter coefficient for 0x55b7a7e47300[4][4]Enter coefficient for 0x55b7a7e47300[4][5]Enter coefficient for 0x55b7a7e47300[5][0]Enter coefficient for 0x55b7a7e47300[5][1]Enter coefficient for 0x55b7a7e47300[5][2]Enter coefficient for 0x55b7a7e47300[5][3]Enter coefficient for 0x55b7a7e47300[5][4]Enter coefficient for 0x55b7a7e47300[5][5]
+ ===== CONVERGENCE PREDICTION: may not conv =====
+PRINTING VECTOR FROM: 0x55b7a7e472e0 LOCATION :
+1.000000 1.000000 0.999999 0.999999 0.999999 1.000000
+EPSILON CALCULATED 43
+\end{lstlisting}
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont,caption=Execution with A6 dimensions: 8x8]
+A matrix dimensions: 
+Enter coefficient for 0x5613b3702320[0][0]Enter coefficient for 0x5613b3702320[0][1]Enter coefficient for 0x5613b3702320[0][2]Enter coefficient for 0x5613b3702320[0][3]Enter coefficient for 0x5613b3702320[0][4]Enter coefficient for 0x5613b3702320[0][5]Enter coefficient for 0x5613b3702320[0][6]Enter coefficient for 0x5613b3702320[0][7]Enter coefficient for 0x5613b3702320[1][0]Enter coefficient for 0x5613b3702320[1][1]Enter coefficient for 0x5613b3702320[1][2]Enter coefficient for 0x5613b3702320[1][3]Enter coefficient for 0x5613b3702320[1][4]Enter coefficient for 0x5613b3702320[1][5]Enter coefficient for 0x5613b3702320[1][6]Enter coefficient for 0x5613b3702320[1][7]Enter coefficient for 0x5613b3702320[2][0]Enter coefficient for 0x5613b3702320[2][1]Enter coefficient for 0x5613b3702320[2][2]Enter coefficient for 0x5613b3702320[2][3]Enter coefficient for 0x5613b3702320[2][4]Enter coefficient for 0x5613b3702320[2][5]Enter coefficient for 0x5613b3702320[2][6]Enter coefficient for 0x5613b3702320[2][7]Enter coefficient for 0x5613b3702320[3][0]Enter coefficient for 0x5613b3702320[3][1]Enter coefficient for 0x5613b3702320[3][2]Enter coefficient for 0x5613b3702320[3][3]Enter coefficient for 0x5613b3702320[3][4]Enter coefficient for 0x5613b3702320[3][5]Enter coefficient for 0x5613b3702320[3][6]Enter coefficient for 0x5613b3702320[3][7]Enter coefficient for 0x5613b3702320[4][0]Enter coefficient for 0x5613b3702320[4][1]Enter coefficient for 0x5613b3702320[4][2]Enter coefficient for 0x5613b3702320[4][3]Enter coefficient for 0x5613b3702320[4][4]Enter coefficient for 0x5613b3702320[4][5]Enter coefficient for 0x5613b3702320[4][6]Enter coefficient for 0x5613b3702320[4][7]Enter coefficient for 0x5613b3702320[5][0]Enter coefficient for 0x5613b3702320[5][1]Enter coefficient for 0x5613b3702320[5][2]Enter coefficient for 0x5613b3702320[5][3]Enter coefficient for 0x5613b3702320[5][4]Enter coefficient for 0x5613b3702320[5][5]Enter coefficient for 0x5613b3702320[5][6]Enter coefficient for 0x5613b3702320[5][7]Enter coefficient for 0x5613b3702320[6][0]Enter coefficient for 0x5613b3702320[6][1]Enter coefficient for 0x5613b3702320[6][2]Enter coefficient for 0x5613b3702320[6][3]Enter coefficient for 0x5613b3702320[6][4]Enter coefficient for 0x5613b3702320[6][5]Enter coefficient for 0x5613b3702320[6][6]Enter coefficient for 0x5613b3702320[6][7]Enter coefficient for 0x5613b3702320[7][0]Enter coefficient for 0x5613b3702320[7][1]Enter coefficient for 0x5613b3702320[7][2]Enter coefficient for 0x5613b3702320[7][3]Enter coefficient for 0x5613b3702320[7][4]Enter coefficient for 0x5613b3702320[7][5]Enter coefficient for 0x5613b3702320[7][6]Enter coefficient for 0x5613b3702320[7][7]
+ ===== CONVERGENCE PREDICTION: may not conv =====
+PRINTING VECTOR FROM: 0x5613b37022f0 LOCATION :
+1.000000 1.000000 1.000000 0.999999 0.999999 0.999999 0.999999 1.000000
+EPSILON CALCULATED 58
+\end{lstlisting}
+\begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont,caption=Execution with A6 dimensions: 10x10]
+A matrix dimensions: 
+Enter coefficient for 0x5634c724b320[0][0]Enter coefficient for 0x5634c724b320[0][1]Enter coefficient for 0x5634c724b320[0][2]Enter coefficient for 0x5634c724b320[0][3]Enter coefficient for 0x5634c724b320[0][4]Enter coefficient for 0x5634c724b320[0][5]Enter coefficient for 0x5634c724b320[0][6]Enter coefficient for 0x5634c724b320[0][7]Enter coefficient for 0x5634c724b320[0][8]Enter coefficient for 0x5634c724b320[0][9]Enter coefficient for 0x5634c724b320[1][0]Enter coefficient for 0x5634c724b320[1][1]Enter coefficient for 0x5634c724b320[1][2]Enter coefficient for 0x5634c724b320[1][3]Enter coefficient for 0x5634c724b320[1][4]Enter coefficient for 0x5634c724b320[1][5]Enter coefficient for 0x5634c724b320[1][6]Enter coefficient for 0x5634c724b320[1][7]Enter coefficient for 0x5634c724b320[1][8]Enter coefficient for 0x5634c724b320[1][9]Enter coefficient for 0x5634c724b320[2][0]Enter coefficient for 0x5634c724b320[2][1]Enter coefficient for 0x5634c724b320[2][2]Enter coefficient for 0x5634c724b320[2][3]Enter coefficient for 0x5634c724b320[2][4]Enter coefficient for 0x5634c724b320[2][5]Enter coefficient for 0x5634c724b320[2][6]Enter coefficient for 0x5634c724b320[2][7]Enter coefficient for 0x5634c724b320[2][8]Enter coefficient for 0x5634c724b320[2][9]Enter coefficient for 0x5634c724b320[3][0]Enter coefficient for 0x5634c724b320[3][1]Enter coefficient for 0x5634c724b320[3][2]Enter coefficient for 0x5634c724b320[3][3]Enter coefficient for 0x5634c724b320[3][4]Enter coefficient for 0x5634c724b320[3][5]Enter coefficient for 0x5634c724b320[3][6]Enter coefficient for 0x5634c724b320[3][7]Enter coefficient for 0x5634c724b320[3][8]Enter coefficient for 0x5634c724b320[3][9]Enter coefficient for 0x5634c724b320[4][0]Enter coefficient for 0x5634c724b320[4][1]Enter coefficient for 0x5634c724b320[4][2]Enter coefficient for 0x5634c724b320[4][3]Enter coefficient for 0x5634c724b320[4][4]Enter coefficient for 0x5634c724b320[4][5]Enter coefficient for 0x5634c724b320[4][6]Enter coefficient for 0x5634c724b320[4][7]Enter coefficient for 0x5634c724b320[4][8]Enter coefficient for 0x5634c724b320[4][9]Enter coefficient for 0x5634c724b320[5][0]Enter coefficient for 0x5634c724b320[5][1]Enter coefficient for 0x5634c724b320[5][2]Enter coefficient for 0x5634c724b320[5][3]Enter coefficient for 0x5634c724b320[5][4]Enter coefficient for 0x5634c724b320[5][5]Enter coefficient for 0x5634c724b320[5][6]Enter coefficient for 0x5634c724b320[5][7]Enter coefficient for 0x5634c724b320[5][8]Enter coefficient for 0x5634c724b320[5][9]Enter coefficient for 0x5634c724b320[6][0]Enter coefficient for 0x5634c724b320[6][1]Enter coefficient for 0x5634c724b320[6][2]Enter coefficient for 0x5634c724b320[6][3]Enter coefficient for 0x5634c724b320[6][4]Enter coefficient for 0x5634c724b320[6][5]Enter coefficient for 0x5634c724b320[6][6]Enter coefficient for 0x5634c724b320[6][7]Enter coefficient for 0x5634c724b320[6][8]Enter coefficient for 0x5634c724b320[6][9]Enter coefficient for 0x5634c724b320[7][0]Enter coefficient for 0x5634c724b320[7][1]Enter coefficient for 0x5634c724b320[7][2]Enter coefficient for 0x5634c724b320[7][3]Enter coefficient for 0x5634c724b320[7][4]Enter coefficient for 0x5634c724b320[7][5]Enter coefficient for 0x5634c724b320[7][6]Enter coefficient for 0x5634c724b320[7][7]Enter coefficient for 0x5634c724b320[7][8]Enter coefficient for 0x5634c724b320[7][9]Enter coefficient for 0x5634c724b320[8][0]Enter coefficient for 0x5634c724b320[8][1]Enter coefficient for 0x5634c724b320[8][2]Enter coefficient for 0x5634c724b320[8][3]Enter coefficient for 0x5634c724b320[8][4]Enter coefficient for 0x5634c724b320[8][5]Enter coefficient for 0x5634c724b320[8][6]Enter coefficient for 0x5634c724b320[8][7]Enter coefficient for 0x5634c724b320[8][8]Enter coefficient for 0x5634c724b320[8][9]Enter coefficient for 0x5634c724b320[9][0]Enter coefficient for 0x5634c724b320[9][1]Enter coefficient for 0x5634c724b320[9][2]Enter coefficient for 0x5634c724b320[9][3]Enter coefficient for 0x5634c724b320[9][4]Enter coefficient for 0x5634c724b320[9][5]Enter coefficient for 0x5634c724b320[9][6]Enter coefficient for 0x5634c724b320[9][7]Enter coefficient for 0x5634c724b320[9][8]Enter coefficient for 0x5634c724b320[9][9]
+ ===== CONVERGENCE PREDICTION: may not conv =====
+PRINTING VECTOR FROM: 0x5634c724b2f0 LOCATION :
+1.000000 1.000000 1.000000 1.000000 1.000000 0.999999 0.999999 0.999999 0.999999 1.000000
+EPSILON CALCULATED 70
+\end{lstlisting}
+\subsection{Remarque sur les résultats}
+On remarquera que lorsque Jacobi renvoie \textbf{NaN}, Il s'agit du cas où cette méthode diverge, donc aucun résultat fiable n'est envisageable.\\
+On rappelera aussi que dans le cadre de ce programme, si la méthode renvoie des valeurs \textbf{extremêment proches} de 1, alors le programme a trouvé une solution. 
 \end{document}                                                                                                                                                                                                                                              
