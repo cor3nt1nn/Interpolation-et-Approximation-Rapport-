@@ -13,15 +13,18 @@ int jacobi(float **A, float *vector, float *b, float *S, int n, float minErr,
            int bound) {
   float epsilon = epsi(S, vector, n);
   int k = 0;
+  float *cp = malloc(n * sizeof *cp);
   while (k < bound && epsilon >= minErr) {
-    fprintf(stderr, "%0.6f ", epsilon);
+    fprintf(stderr, "%f ", epsilon);
     // printf("EPSILON : %f\n", epsilon);
+    copy(cp, vector, n);
     for (int i = 0; i < n; i++) {
-      vector[i] = (1 / A[i][i]) * (b[i] - jacobiSum(A, vector, n, i));
+      vector[i] = (1 / A[i][i]) * (b[i] - jacobiSum(A, cp, n, i));
     }
     epsilon = epsi(vector, S, n);
     k++;
   }
+  free(cp);
   return k;
 }
 int main(int argc, char *argv[]) {

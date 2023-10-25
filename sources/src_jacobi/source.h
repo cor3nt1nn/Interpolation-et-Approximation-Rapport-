@@ -21,6 +21,11 @@ void printVect(float *V, int m) {
     (i <= m - 2) ? printf("%f ", V[i]) : printf("%f\n", V[i]);
   }
 }
+void copy(float *V, float *T, int n) {
+  for (int i = 0; i < n; i++) {
+    V[i] = T[i];
+  }
+}
 /*
  * CALCULATE THE NORM OF A VECTOR
  */
