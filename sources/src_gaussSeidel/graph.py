@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 with open('fichiertest.txt', 'r') as file:
-    lines = file.readlines()
+    lines = file.readlines()   
 
 iterations = []
 erreurs = []

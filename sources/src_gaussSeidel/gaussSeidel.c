@@ -20,6 +20,7 @@ float** gaussSeidel(FILE* fd, float **matA, float **matB, float **matXk, int row
     float **matXk1=createMatrix(row, 1);
 
     float epsilon=majEpsilon(matXk, row);
+    fprintf(fd, "%.6f ", epsilon);
     int iter=0;
     
     while ((epsilon>=pow(10,-6)) && (iter<nbIterMax)){
@@ -50,7 +51,7 @@ float** gaussSeidel(FILE* fd, float **matA, float **matB, float **matXk, int row
         puts("Nombre d'itérations maximum atteint");
     }
     fprintf(fd, "\n");
-    fprintf(fd, "%d\n", iter);
+    fprintf(fd, "%d\n", iter+1);
     freeMatrix(matXk1, row);
     return matXk;
 }
