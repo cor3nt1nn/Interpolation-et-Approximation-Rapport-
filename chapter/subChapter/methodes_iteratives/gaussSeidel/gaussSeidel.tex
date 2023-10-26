@@ -49,7 +49,7 @@
 \section{Méthode de Gauss-Seidel}
 \subsection{Introduction à la méthode de Gauss-Seidel}
 La méthode de Gauss-Seidel est une méthode itérative pour résoudre 
-les systèmes linéaires de la forme $Ax=b$, où $A$ est une matrice carrée d'ordre $n$ et $x, b$ sont des vecteurs de $\mathbb{R}^n$. 
+les systèmes linéaires de la forme $Ax=b$, où $A$ est une matrice carrée d'ordre $n$, et $x, b$ sont des vecteurs de $\mathbb{R}^n$. 
 C'est une méthode qui génère 
 une suite qui converge vers la solution de ce système lorsque celle-ci en a une et lorsque les conditions de convergence suivantes sont satisfaites (quels que soient le vecteur $b$ et le point initial $x^0$):
 \begin{itemize}
@@ -70,12 +70,13 @@ On définit ensuite une suite de vecteurs $(x^k)$ en choisissant un vecteur $x^0
 \begin{equation}
   x_i^{k+1}=\frac{1}{a_{i,i}}\Bigg(b_i-\sum \limits_{j = 1}^{i-1}a_{i,j}x_{j}^{k+1} - \sum \limits_{j = i+1}^{n}a_{i,j}x_{j}^{k}\Bigg)
 \end{equation}
+\newpage
 \subsection{Algorithme}
 Pour résoudre un système $Ax=b$, avec $A \in \mathcal{M}_{n}$ et $b\in \mathcal{M}_{n,1}$, on s'appuie sur l'algorithme suivant en posant :
 \begin{itemize}
   \item un vecteur initial $x^{(0)}$ choisi au préalable,
   \item l'erreur à l'itération k=0 calculée par $\varepsilon^{(0)}=\Vert Ax^{(0)}-b\Vert$,
-  \item une variable $k$ qui sera notre compteur d'itération.
+  \item une variable $k$ qui sera notre compteur d'itérations.
 \end{itemize}\vspace{6pt}
 \label{algogs}
 
@@ -173,7 +174,7 @@ $A=
 \end{pmatrix}}_{F}
 $\vspace{8pt}\\
 Nous obtenons alors:\vspace{8pt}\\
-\begin{align}
+\begin{align*}
 x^{(1)}&=\begin{pmatrix}
   \frac{1}{1}&0&0\\
   0&\frac{1}{3}&0\\
@@ -194,8 +195,8 @@ x^{(1)}&=\begin{pmatrix}
   0 \\
   0 \\
   0 \\
-\end{pmatrix}\Bigg]\\
-&=\begin{pmatrix}
+\end{pmatrix}\Bigg]
+=\begin{pmatrix}
   \frac{1}{1}&0&0\\
   0&\frac{1}{3}&0\\
   0&0&\frac{1}{8}\\
@@ -203,23 +204,23 @@ x^{(1)}&=\begin{pmatrix}
   2 \\
   2 \\
   8 \\
-\end{pmatrix}\\
-&=\begin{pmatrix}
+\end{pmatrix}
+=\begin{pmatrix}
   2 \vspace{4pt}\\
   \frac{2}{3} \vspace{4pt}\\
   1 \\
 \end{pmatrix}
-\end{align}
+\end{align*}
 \textit{\underline{Remarque:} Au fur et à mesure des itérations, le vecteur $x$ donné par le calcul itératif effectué dans la partie \ref{calcite} se rapproche de la solution donnée par le précédent calcul. Il est alors normal que le vecteur trouvé au bout de la première itération soit différent du vecteur trouvé ci-dessus.}
 \subsection{Implémentation}
 \subsubsection{Commentaires fonctionnels}
-\textit{\underline{Note:} L'implémentation qui suit utilise exactement les mêmes fonctions usuelles de manipulation de matrice que l'implémentation de l'algorithme de Gauss décrit dans la section \ref{fonctusu}. De plus, dans cette implémentation, nous définirons une variable $k$ qui sera notre compteur d'itération et qui permettra l'arrêt de notre code si la suite ne converge pas. Enfin, notre variable erreur $\varepsilon$ sera mise à jour à chaque itération de la manière suivante:\\}
+\textit{\underline{Note:} L'implémentation qui suit utilise exactement les mêmes fonctions usuelles de manipulation de matrice que l'implémentation de l'algorithme de Gauss décrit dans la section \ref{fonctusu}. De plus, dans cette implémentation, nous définirons une variable $k$ qui sera notre compteur d'itérations et qui permettra l'arrêt de notre code si la suite ne converge pas. Enfin, notre variable erreur $\varepsilon$ sera calculée à chaque itération de la manière suivante:\\}
 \begin{center}
   $\varepsilon^{(k)}=p^{(k)}=Max_{i=1,...,n}|\overline{x}_i-\widetilde{x}_i^k|$
 \end{center}\vspace{8pt}
-Nous détaillerons dans cette section uniquement les fonctions dites "non-usuelles" qui vont nous servir pour l'implémentation de l'algorithme de Gauss-Seidel. Il s'agit ici de la fonction de mise à jour de notre variable erreur et de la fonction implémentant l'algorithme de Gauss-Seidel.\vspace{8pt}\\
+Nous détaillerons dans cette section uniquement les fonctions dites "non-usuelles" qui vont nous servir pour l'implémentation de l'algorithme de Gauss-Seidel. Il s'agit ici de la fonction de calcul de notre variable erreur $\varepsilon$ et de la fonction implémentant l'algorithme de Gauss-Seidel.\vspace{8pt}\\
 \textbf{\underline{Fonction \textit{majEpsilon:}}}\vspace{6pt}\\
-La fonction \textbf{majEpsilon} permet de mettre à jour la variable d'erreur $\varepsilon$ lors de l'exécution de notre algorithme. Grâce au vecteur $x^{(k)}$ qui représente la solution actuelle de notre système d'équations, la fonction calcule la différence absolue entre chaque élément $x_i^{(k)}$ et $1$. Cela permet de mesurer à quel point les valeurs actuelles se rapprochent de 1, qui est notre valeur cible pour les solutions convergentes. La fonction conserve le maximum de ces différences absolues en tant que mesure d'erreur afin de mettre à jour notre variable $\varepsilon$. Cela permet de contrôler la précision de l'algorithme et de décider quand il a convergé de manière satisfaisante vers la solution recherchée. La fonction \textbf{majEpsilon} joue donc un rôle dans la détermination du critère d'arrêt de l'algorithme. Voici son implémentation en C:
+La fonction \textbf{majEpsilon} permet de calculer la valeur d'$\varepsilon$ à l'itération $k$ lors de l'exécution de notre algorithme. Grâce au vecteur $x^{(k)}$ qui représente la solution actuelle de notre système d'équations, la fonction calcule la différence absolue entre chaque élément $x_i^{(k)}$ et $1$. Cela permet de mesurer à quel point les valeurs actuelles se rapprochent de 1, qui est notre valeur cible pour les solutions convergentes. La fonction conserve le maximum de ces différences absolues en tant que mesure d'erreur afin de mettre à jour notre variable $\varepsilon$. Cela permet de contrôler la précision de l'algorithme et de décider quand il a convergé de manière satisfaisante vers la solution recherchée. La fonction \textbf{majEpsilon} joue donc un rôle dans la détermination du critère d'arrêt de l'algorithme. Voici son implémentation en C:
 
 \begin{lstlisting}[language=C,inputencoding=utf8, basicstyle=\fontsize{8}{10}\selectfont]
 float majEpsilon(float** matXk, int row){
@@ -234,6 +235,7 @@ float majEpsilon(float** matXk, int row){
   return maxforEps;
 }
 \end{lstlisting}
+\newpage
 \textbf{\underline{Fonction \textit{gaussSeidel:}}}\vspace{6pt}\\
 La fonction \textbf{gaussSeidel} implémente l'algorithme de Gauss-Seidel tel que décrit précédemment dans la section \ref{algogs}. Par la programmation itérative, notre algorithme mettra à jour les solutions actuelles jusqu'à ce que l'erreur minimale définie soit atteinte ou que le nombre maximal d'itérations soit atteint. Voici son implémentation en C:
 
@@ -282,6 +284,7 @@ La fonction \textbf{gaussSeidel} implémente l'algorithme de Gauss-Seidel tel qu
     return matXk;
 }
 \end{lstlisting}
+\newpage
 \subsection{Exemples d'exécution}
 Soient les matrices $A$ données dans le TP et dans l'annexe du document (section \ref{annexe}).
 En résolvant le système $Ax=b$ en question, nous obtenons respectivement les résultats suivants:
@@ -337,7 +340,7 @@ En résolvant le système $Ax=b$ en question, nous obtenons respectivement les r
   1.000   
   Temps d'execution : 0.000305 secondes
 \end{lstlisting}
-
+\newpage
 \begin{lstlisting}[caption={$A_7X=B$} results, basicstyle=\fontsize{5}{8}\selectfont]
                   SOLUTION VECTOR X 
   1.000   
@@ -374,7 +377,7 @@ En résolvant le système $Ax=b$ en question, nous obtenons respectivement les r
   Temps d'execution : 0.000274 secondes
 \end{lstlisting}
 
-\begin{lstlisting}[caption={$A_10X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
+\begin{lstlisting}[caption={$A_{10}X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
                   SOLUTION VECTOR X 
   1.000   
   1.000   
@@ -385,7 +388,7 @@ En résolvant le système $Ax=b$ en question, nous obtenons respectivement les r
   Temps d'execution : 0.000315 secondes
 \end{lstlisting}
 
-\begin{lstlisting}[caption={$A_11X=B$} results, basicstyle=\fontsize{5}{8}\selectfont]
+\begin{lstlisting}[caption={$A_{11}X=B$} results, basicstyle=\fontsize{5}{8}\selectfont]
                   SOLUTION VECTOR X 
   1.000   
   1.000   
@@ -398,7 +401,7 @@ En résolvant le système $Ax=b$ en question, nous obtenons respectivement les r
   Temps d'execution : 0.000341 secondes
 \end{lstlisting}
 
-\begin{lstlisting}[caption={$A_12X=B$} results, basicstyle=\fontsize{5}{8}\selectfont]
+\begin{lstlisting}[caption={$A_{12}X=B$} results, basicstyle=\fontsize{5}{8}\selectfont]
                   SOLUTION VECTOR X 
   1.000   
   1.000   

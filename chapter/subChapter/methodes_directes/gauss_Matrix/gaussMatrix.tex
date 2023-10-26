@@ -29,6 +29,7 @@ Dans le cadre de notre résolution de systèmes d'équations linéaires, deux fo
 
 
 En combinant ces deux fonctions avec celles sus-citées en \ref{fonctusu}, le code réalise un processus complet de résolution de systèmes d'équations linéaires de manière efficace et précise (aux erreurs d'arrondies près).\\
+\newpage
 \subsection{Code source}
 Puisque nous sommes contraints de minimiser la présence de code dans ce rapport, nous ne présenterons pas ici les fonctions usuelles de manipulations de matrices suivantes: \textit{\textbf{createMatrix}},  \textit{\textbf{printMatrix}},  \textit{\textbf{freeMatrix}},  \textit{\textbf{completeMatrix}},  \textit{\textbf{generateB}}.\\
 
@@ -63,6 +64,7 @@ void resolution(float** matA, float** matb, float** matx, int size){
 	}
 }
 \end{lstlisting}
+\newpage
 \subsection{Interactions Utilisateur/Console}
 \subsubsection{Entrées utilisateur}
 
@@ -78,7 +80,6 @@ $a_{1,1}, a_{1,2}, ..., a_{1,n}, \text{   puis   } a_{2,1}, ... a_{2,n}, \text{ 
 Nous avons donc:\\ $ \text{Soient } A\in \mathcal{M}_{n,p} \text{ et } B\in \mathcal{M}_{n,1}  , \forall i \in \{1,n\}  , b_{i,1}=\sum_{j=1}^{p} a_{i,p}$.\\
 \item Allouer une matrice $X$ en mémoire. Cette matrice aura la même taille que la matrice $B$. Ces coefficients ne seront pas définis pour le moment.
 \end{enumerate}
-\newpage
 En guise d'exemple, le système matriciel $AX=B$ suivant:
 
 \begin{equation}
@@ -168,6 +169,7 @@ Il est à repérer que le programme affiche dans cet ordre: \\
 \end{itemize}
 
 \textit{\underline{Remarque}: le temps d'exécution de ce programme a été de 0.000237 secondes}
+\newpage
 \subsection{Exemples d'exécution}
 
 \textit{\underline{Note:} Par souci de présentation, les coefficients des matrices sont ici arrondis pour une précision de $10^{-3}$}\vspace{4pt}\\
@@ -362,6 +364,7 @@ Soient les matrices $A$ données dans le TP et en annexe du document. On obtient
 	
 	Temps d'execution : 0.000360 secondes
 \end{lstlisting}
+\newpage
 \begin{lstlisting}[caption={$A_9X=B$} results, basicstyle=\fontsize{8}{10}\selectfont]
 					TRIANGULARIZATION 
 					A Matrix 
@@ -407,6 +410,7 @@ Soient les matrices $A$ données dans le TP et en annexe du document. On obtient
 	
 	Temps d'execution : 0.000407 secondes
 \end{lstlisting}
+\newpage
 \begin{lstlisting}[caption={$A_{11}X=B$} results, basicstyle=\fontsize{5}{8}\selectfont]
 					TRIANGULARIZATION 
 					A Matrix 

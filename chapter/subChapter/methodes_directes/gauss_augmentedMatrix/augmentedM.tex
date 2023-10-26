@@ -48,6 +48,7 @@ float *findSolutions(float **A, int m) {
   return S;
 }
 \end{lstlisting}
+\newpage
 \subsection{Commentaires du code}
 Mon implémentation utilise strictement l'algorithme de Gauss rappelé précédemment avec seulement quelques changements d'indices puisque au lieu de travailler sur une matrice carrée et un vecteur colonne, mon programme utilise une matrice augmentée ayant $m$ lignes et $m+1$ colonnes, $m\in \mathbb{N}^*$. \\
 \textbf{Détail des fonctions non conventionnelles:}\\
@@ -85,6 +86,7 @@ sont représentés par ce fichier d'entrées:
 -1 1 2
 1 1 1
 \end{lstlisting}
+\newpage
 Pour ce qui est des résultats produits par mon programme, une fois injecté dans un fichier texte, une output "type" ressemble à ceci. \\
 \begin{lstlisting}[caption=Gauss elimination with M and X matrix, basicstyle=\fontsize{8}{10}\selectfont]
 PRINTING MATRIX FROM: 0x556d938672c0 LOCATION :
@@ -116,6 +118,7 @@ On remarquera que le programme affiche dans cet ordre: \\
 - \textbf{La Matrice augmentée en triangle supérieur} \\
 - \textbf{Les solutions} \\
 - \textbf{Un timer permettant de contrôler le temps d'exécution approximatif de mon programme} 
+\newpage
 \subsection{Exemples d'exécutions}
 
 Soient $A_2 = \begin{pmatrix}
@@ -186,6 +189,7 @@ x1 = 0.999999
 x2 = 1.000000
 RUNTIME: 0.000002 seconds  
 \end{lstlisting}
+\newpage
 \begin{lstlisting}[caption=Matrix 6 results, basicstyle=\fontsize{8}{10}\selectfont]
 PRINTING MATRIX FROM: 0x557fdaa552c0 LOCATION :
 3.000000 -1.000000 0.000000
