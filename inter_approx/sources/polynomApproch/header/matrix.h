@@ -31,6 +31,17 @@ void printMatrix(float **mat, int row, int column){
 	}
 }
 
+void printMatrixIntoFile(float **mat, int row, int column, FILE* fd){
+	for (int i=0; i<row; i++){
+    		for(int j=0; j<column; j++){
+				printf("%.3f   ", mat[i][j]);
+         		fprintf(fd, "%f ", mat[i][j]);
+    		}
+			printf("\n");
+    		fprintf(fd, "\n");
+	}
+}
+
 /*
 FREE A 2D FLOAT MATRIX
 */
