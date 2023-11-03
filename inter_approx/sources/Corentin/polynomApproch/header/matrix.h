@@ -34,10 +34,8 @@ void printMatrix(float **mat, int row, int column){
 void printMatrixIntoFile(float **mat, int row, int column, FILE* fd){
 	for (int i=0; i<row; i++){
     		for(int j=0; j<column; j++){
-				printf("%.3f   ", mat[i][j]);
          		fprintf(fd, "%f ", mat[i][j]);
     		}
-			printf("\n");
     		fprintf(fd, "\n");
 	}
 }
@@ -67,16 +65,3 @@ void completeMatrix(float **mat, int row, int column){
 	}
 }
 
-/*
-GENERATE A COLUMN VECTOR "B" FROM A 2D FLOAT MATRIX "A"
-*/
-
-void generateB(float **matA, float **matB, int row, int column){
-	for(int i=0; i<row; i++){
-		float sum=0;
-		for(int j=0; j<column; j++){
-			sum+=matA[i][j];
-		}
-		matB[i][0]=sum;
-    	}
-}
