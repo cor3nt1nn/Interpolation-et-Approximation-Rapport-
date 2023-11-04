@@ -56,10 +56,10 @@ COMPLETE A 2D FLOAT MATRIX FROM USER INPUT
 */
 
 void completeMatrix(float **mat, int row, int column){
-	puts("\n		FILL IN THE VALUE OF MATRIX A \n");
+	puts("\n		FILL IN THE VALUE OF DATA MATRIX  \n");
 	for (int i=0; i<row; i++){
     		for(int j=0; j<column; j++){
-    			printf("Value for a_%d,%d:   ", i+1, j+1);
+    			printf("Value for data_%d,%d:   ", i+1, j+1);
          		scanf("%f", &mat[i][j]);
     		}
 	}

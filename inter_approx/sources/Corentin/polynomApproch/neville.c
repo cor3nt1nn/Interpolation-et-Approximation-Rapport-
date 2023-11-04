@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
+#include <math.h>
 #include "header/polynom.h"
 #include "header/matrix.h"
 
@@ -71,6 +71,35 @@ void writeDataIntoFile(float** data, _polynom polynom, int n, int nbPoints, int 
     }
 }
 
+void printPolynomial(_polynom polynom) {
+    if (polynom.degree < 0) {
+        printf("0");
+        return;
+    }
+
+    for (int i = polynom.degree; i >= 0; i--) {
+        float coefficient = polynom.coefficients[i];
+        if (coefficient != 0.00) {
+            if (i < polynom.degree) {
+                if (coefficient > 0.0) {
+                    printf(" + ");
+                } else {
+                    printf(" - ");
+                }
+            }
+
+            if (i == 0) {
+                printf("%.6f", fabs(coefficient));
+            } else {
+                printf("%.6fx^%d", fabs(coefficient), i);
+            }
+        }
+    }
+
+    printf("\n");
+}
+
+
 int main(int argc, char const *argv[])
 {
     clock_t start, end;
@@ -90,8 +119,8 @@ int main(int argc, char const *argv[])
     start = clock();
     _polynom polynom=computePolynomials(data, n-1, 0, n, fd);
     end = clock();
-
-    printPolynom(polynom);
+    puts("\nPolynom");
+    printPolynomial(polynom);
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("\nTemps d'exécution : %f secondes\n", cpu_time_used);
     writeDataIntoFile(data, polynom, n, 50, 1, fd);

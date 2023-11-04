@@ -23,7 +23,6 @@ float* getMeans(float** data, int n) {
     result[1] = sumY / n;
     result[2] = sumX2 / n;
     result[3] = sumXY / n;
-
     return result;
 }
 

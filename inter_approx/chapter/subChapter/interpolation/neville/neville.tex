@@ -6,16 +6,187 @@ Considérons un ensemble de $n$ points donnés, notés $(x_i, y_i)$, où les $x_
     $p(x_i)=y_i$, \text{ avec   } $i=0, ..., n-1$
 \end{center}
 La méthode de Neville consiste à évaluer ce polynôme pour le point d'abscisse $x$.\\
-Soit $p_k[x_i, ..., x_i+k](x)$ le polynôme de degré $k$ qui passe par les points $(x_i, y_i), ..., (x_{i+k}, y_{i+k})$. Alors $p_k[x_i, ..., x_{i+k}](x)$ vérifie la relation de récurrence suivante:\vspace{5pt}\\
+Soit $p_k[x_i, ..., x_i+k](x)$ le polynôme de degré $k$ qui passe par les points $(x_i, y_i), ..., (x_{i+k}, y_{i+k})$. Alors $p_k[x_i, ..., x_{i+k}](x)$ vérifie la relation de récurrence suivante:\label{recurrence}\vspace{5pt}\\
 \begin{equation*}
-    \begin{cases}
-        p_0[x_i](x)=y_i, \text{     avec  } 0\leqslant i< n \text{  et } k=0\vspace{6pt}\\
-        p_k[x_i, ..., x_{i+k}](x)=\frac{(x-x_{i+k})p_{k-1}[x_i, ..., x_{i+k-1}](x)+(x_i-x)p_{k-1}[x_{i+1}, ..., x_{i+k}](x)}{x_i-x_{i+k}}, \text{     avec  } 1\leqslant k<n \text{ et } 0\leqslant i< n
-    \end{cases}
+        \begin{cases}
+            p_0[x_i](x)=y_i, \text{     avec  } 0\leqslant i< n \text{  et } k=0\vspace{6pt} \\
+            p_k[x_i, ..., x_{i+k}](x)=\frac{(x-x_{i+k})p_{k-1}[x_i, ..., x_{i+k-1}](x)+(x_i-x)p_{k-1}[x_{i+1}, ..., x_{i+k}](x)}{x_i-x_{i+k}}, \text{     avec  } 1\leqslant k<n \text{ et } 0\leqslant i< n
+        \end{cases}
 \end{equation*}
-Cette relation de récurrence permet de calculer $p_{n-1}[x_0, ..., x_{n-1}](x)$, qui est le polynôme recherché.
-% Arbre à faire
+
+\normalsize
+Cette relation de récurrence permet de calculer $p_{n-1}[x_0, ..., x_{n-1}](x)$, qui est le polynôme recherché.\vspace{6pt}\\
+Nous pouvons alors représenter les polynômes calculés par cette relation de récurrence dans un graphe. Soit une collection de 4 points $(x,y)$. Alors le polynôme recherché, interpolateur de ces points, est $p_3[x_0, ..., x_3](x)$. Voici la représentation des polynômes calculés par la méthode: \vspace{6pt}\\
+\begin{center}
+    \begin{tikzpicture}
+    \node (A) at (0, 0) {$p_3[x_0, ..., x_3](x)$};
+    \node (B1) at (-1.5, -1.5) {$p_2[x_0, ..., x_2](x)$};
+    \node (B2) at (1.5, -1.5) {$p_2[x_1, ..., x_3](x)$};
+    \node (C1) at (-3, -3) {$p_1[x_0, ..., x_1](x)$};
+    \node (C2) at (0, -3) {$p_1[x_1, ..., x_2](x)$};
+    \node (C3) at (3, -3) {$p_1[x_2, ..., x_3](x)$};
+    \node (D1) at (-4.5, -4.5) {$p_0[x_0](x)$};
+    \node (D2) at (-1.5, -4.5) {$p_0[x_1](x)$};
+    \node (D3) at (1.5, -4.5) {$p_0[x_2](x)$};
+    \node (D4) at (4.5, -4.5) {$p_0[x_3](x)$};
+
+    \draw (A) -- (B1);
+    \draw (A) -- (B2);
+    \draw (B1) -- (C1);
+    \draw (B1) -- (C2);
+    \draw (B2) -- (C2);
+    \draw (B2) -- (C3);
+    \draw (C1) -- (D1);
+    \draw (C1) -- (D2);
+    \draw (C2) -- (D2);
+    \draw (C2) -- (D3);
+    \draw (C3) -- (D3);
+    \draw (C3) -- (D4);
+    \end{tikzpicture}
+\end{center}
+\newpage
 \subsection{Résolution Manuelle}
+\begin{center}
+    \textbf{Soient les points donnés dans le tableau ci-dessous.Déterminer le polynôme interpolateur $p(x)$ de ces points.}\vspace{6pt}\\
+\begin{tabular}{|c|c|c|c|}
+    \hline
+    $x_i$ & 2 & 6 & 4 \\
+    \hline
+    $y_i$ & 4 & 1.5 & -2\\
+    \hline
+\end{tabular}
+\end{center}
+\underline{\textit{Calcul des polynômes pour k=0}}\\
+\begin{center}
+    \begin{align*}
+        p_0[x_0](x)&=y_0=\textcolor{violet}{4}\vspace{4pt}\\
+        p_0[x_1](x)&=y_0=\textcolor{red}{1.5}\vspace{4pt}\\
+        p_0[x_2](x)&=y_0=\textcolor{blue}{-2}\vspace{4pt}\\
+    \end{align*}
+\end{center}
+\underline{\textit{Calcul des polynômes pour k=1}}\\
+\begin{center}
+    \begin{align*}
+        p_1[x_0, x_1](x)&=\frac{(x-x_1)p_0[x_0](x)+(x_0-x)p_0[x_1](x)}{x_0-x_1}=\frac{(x-6)\times\textcolor{violet}{4}+(2-x)\times\textcolor{red}{1.5}}{2-6}\\&=\frac{2.5x-21}{-4}=\textcolor{teal}{-0.625x+5.25}\vspace{4pt}\\
+        p_1[x_1, x_2](x)&=\frac{(x-x_2)p_0[x_1](x)+(x_1-x)p_0[x_2](x)}{x_1-x_2}=\frac{(x-4)\times \textcolor{red}{1.5}+(6-x)\times(\textcolor{blue}{-2})}{6-4}\\&=\frac{3.5x-18}{2}=\textcolor{purple}{1.75x-9}\vspace{4pt}\\
+    \end{align*}
+\end{center}
+\underline{\textit{Calcul du polynôme pour k=2}}\\
+\begin{center}
+    \begin{align*}
+        p_2[x_0, x_1, x_2](x)&=\frac{(x-x_2)p_1[x_0, x_1](x)+(x_0-x)p_1[x_1, x_2](x)}{x_0-x_2}=\frac{(x-4)(\textcolor{teal}{-0.625x+5.25})+(2-x)(\textcolor{purple}{1.75x-9})}{2-4}\vspace{4pt}\\&=\frac{-2.375x^2+20.25x-39}{-2}=1.1875x^2-10.125x+19.5\vspace{4pt}\\
+    \end{align*}
+\end{center}
+Nous avons donc bien notre polynôme interpolateur de degré $n-1=3-1=2$, qui passe par tous les points donnés :\\
+\begin{center}
+    $p(x)=1.1875x^2-10.125x+19.5$\\
+\end{center}
+Nous pouvons vérifier cela:
+\begin{align*}
+    p(x_0)&=p(2)=1.1875\times 2^2-10.125\times 2+19.5=4\\
+    p(x_1)&=p(6)=1.1875\times 6^2-10.125\times 6+19.5=1.5\\
+    p(x_2)&=p(4)=1.1875\times 4^2-10.125\times 4+19.5=-2\\
+\end{align*}
 \subsection{Algorithme}
+Nous allons poser l'algorithme suivant, qui reprend simplement la relation de récurrence vue dans la section \ref{recurrence}.
+\begin{lstlisting}[mathescape=true, frame=single, basicstyle=\linespread{1.5}\fontsize{8}{10}\selectfont]
+Fonction calculerPolynom(data, k, i, nbPoints):
+    si k=0:
+        renvoyer $p_0[x_i](x)$
+    sinon:
+        renvoyer $\frac{(x-x_{i+k})\times calculerPolynom(data, k-1, i, nbPoints)+(x_i-x)\times calculerPolynom(data, k-1, i+1, nbPoints)}{x_i-x_{i+k}}$
+\end{lstlisting}
 \subsection{Implémentation en C}
+Pour l'implémentation en C de cet algorithme, plusieurs contraintes nous font obstacle. Avant de commencer à implémenter notre code, nous devons les citer et trouver un moyen de les franchir.\vspace{6pt}\\
+Nous devrons réfléchir à:
+\begin{itemize}
+    \item De quelle manière stocker les points donnés ?
+    \item Comment représenter un polynôme dans la mémoire ?
+    \item Comment réaliser des opérations sur ces polynômes ?\vspace{4pt}\\
+\end{itemize}
+\label{header}
+Voici les décisions prises pour répondre à ces questions:\vspace{4pt}\\
+\underline{\textit{De quelle manière stocker les points donnés ?}}\vspace{4pt}\\
+Pour stocker les points fournis en entrée de notre programme, j'ai opté pour l'utilisation d'une matrice de flottants. La première ligne de cette matrice correspondra aux abscisses des points, tandis que la deuxième ligne contiendra leurs ordonnées. Sont alors mises en places des fonctions pour la création, le remplissage et l'affichage de la matrice, ainsi qu'une fonction pour libérer la mémoire allouée.\vspace{6pt}\\
+Ainsi, soient les points $(1,2), (2,4), (5,3)$, notre matrice contenant nos données sera alors $\begin{pmatrix}
+    1&2&5\\
+    2&4&3\\
+\end{pmatrix}$.\\
+\underline{\textit{Comment représenter un polynôme dans la mémoire ?}}\vspace{4pt}\\
+Pour représenter un polynôme en mémoire, j'ai choisi d'utiliser une nouvelle structure de données définissant le type \textbf{\_polynom}. Chaque élément de cette structure se voit attribuer un entier \textbf{degree}, qui correspond au degré maximal du polynôme, ainsi qu'un tableau de nombres flottants \textbf{coefficients}. Les coefficients sont stockés dans l'ordre de la base canonique de l'espace vectoriel $\mathbb{R}_n[X]$. Autrement dit, le polynôme $3x^2 + 4x - 2$ serait représenté par le tableau $[-2, 4, 3]$.\vspace{4pt}\\
+
+J'ai donc implémenté la structure \textbf{\_polynom} ainsi que les fonctions suivantes :\vspace{2pt}\\
+\begin{itemize}
+    \item La fonction \textbf{createPolynom} crée un nouveau polynôme en initialisant le degré et les coefficients.
+    \item La fonction \textbf{printPolynom} permet d'afficher le polynôme en console.
+    \item La fonction \textbf{freePolynom} libère la mémoire allouée pour stocker le polynôme, évitant ainsi les fuites de mémoire.\\
+\end{itemize}
+\underline{\textit{Comment réaliser des opérations sur ces polynômes ?}}\vspace{4pt}\\
+Dans le but d'implémenter la méthode de Neville, nous avons besoin de pouvoir manipuler des polynômes. Pour cela, j'ai codé les opérations nécessaires: l'addition de polynômes, la multiplication de polynômes, et la division d'un polynôme par un flottant.\vspace{4pt}\\
+\textbf{Addition de polynôme}\\
+L'opération d'addition de deux polynômes est relativement simple. Pour ce faire, il suffit d'additionner un à un les coefficients du polynôme de degré minimum, avec les coefficients de l'autre polynôme. Les résultats de ces additions sont ensuite stockés dans un nouveau polynôme, que nous renvoyons en sortie de la fonction d'addition.\vspace{4pt}\\
+\textbf{Multiplication de polynôme}\\
+La multiplication de polynôme, bien qu'aisée à effectuer manuellement, s'avère plus ardue lorsqu'il s'agit de l'implémenter de manière efficace. Heureusement ici, nous remarquons que la méthode de Neville n'utilise que la multiplication d'un polynôme de degré $1$ avec un polynôme de degré $k$. Cela facilitera grandement notre travail.\\
+Pour ce faire, nous prenons en paramètre de la fonction un nouveau polynôme de degré $k+1$. Ensuite, nous remplissons ce polynôme en multipliant chaque coefficient du polynôme de degré $k$ par le coefficient associé à $X$ de l'autre polynôme. Enfin, nous additionnons ces résultats avec les produits des coefficients du polynôme de degré $k$ avec le coefficient restant du polynôme de degré $1$. Nous stockons cela dans le nouveau polynôme.\vspace{2pt}\\
+Pour éclaircir tout cela, voici un exemple:\vspace{4pt}\\
+Supposons que l'on veuille réaliser le produit $(2X-1)(3X^2+2X+1)$.\\
+Les polynômes sont respectivement représentés par les tableaux $[-1, 2]$ et $[1, 2, 3]$.
+\begin{enumerate}
+    \item Nous avons notre nouveau polynôme de degré $3$: $[.,.,.,.]$
+    \item Nous multiplions les coefficients $[1,2,3]$ par le coefficient devant $X$ de l'autre polynôme, soit $2$. On obtient: $[.,2,4,6]$.
+    \item Enfin, on multplie les coefficients $[1,2,3]$ par l'autre coefficient de l'autre polynôme, soit $-1$. On ajoute ces produits dans le nouveau polynôme, ce qui donne: $[-1,0,1,6]$.
+\end{enumerate}
+Le produit de $(2X-1)(3X^2+2X+1)$ est donc $6X^3+X^2-1$.\vspace{4pt}\\
+\textbf{Division de polynôme}\\
+Pour effectuer la division d'un polynôme par un flottant, nous stockons simplement, dans un nouveau polynôme, les quotients résultants de la division de chaque coefficient du polynôme par le diviseur fourni en paramètre.
+\newpage
 \subsection{Exemples d'exécution}
+Voici les différentes sorties du programme pour l'interpolation des jeux de données présents en annexe de ce document. Vous trouverez également un graphe représentant les points donnés, ainsi que le polynôme trouvé.
+\begin{lstlisting}[caption={Annexe 1 data} results, basicstyle=\fontsize{8}{10}\selectfont]
+    Polynom
+0.000000x^19 - 0.000000x^18 + 0.000000x^17 - 0.000000x^16 + 
+0.000000x^15 - 0.000000x^14 + 0.000000x^13 - 0.000000x^12 + 
+0.000001x^11 - 0.000025x^10 + 0.000361x^9 - 0.004044x^8 + 
+0.035004x^7 - 0.229974x^6 + 1.116527x^5 - 3.842630x^4 + 
+8.760551x^3 - 11.683978x^2 + 6.758180x^1 + 0.999870
+
+Temps d'execution : 0.096877 secondes
+\end{lstlisting}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{sources/Corentin/polynomApproch/results/graphs/41.png}
+    \caption{Interpolation du jeu de données 1 de l'annexe}
+\end{figure}
+\newpage
+\begin{lstlisting}[caption={Annexe 2 data} results, basicstyle=\fontsize{8}{10}\selectfont]
+    Polynom
+0.000000x^20 - 0.000000x^19 + 0.000000x^18 - 0.000000x^17 + 
+0.000000x^16 - 0.000000x^15 + 0.000000x^14 - 0.000000x^13 + 
+0.000000x^12 - 0.000002x^11 + 0.001309x^10 - 0.860809x^9 + 
+465.832642x^8 - 206286.906250x^7 + 74020648.000000x^6 - 
+21189636096.000000x^5 + 4725708685312.000000x^4 
+- 791294909612032.000000x^3 + 93583403189796864.000000x^2 - 
+6969840492355780608.000000x^1 + 245843147369784279040.000000
+
+Temps d'execution : 0.196364 secondes
+\end{lstlisting}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{sources/Corentin/polynomApproch/results/graphs/42.png}
+    \caption{Interpolation du jeu de données 2 de l'annexe}
+\end{figure}
+\newpage
+\begin{lstlisting}[caption={Annexe 3 data} results, basicstyle=\fontsize{8}{10}\selectfont]
+    Polynom
+0.000012x^10 - 0.001164x^9 + 0.049084x^8 - 1.220944x^7 + 
+19.789038x^6 - 217.668701x^5 + 1639.865601x^4 - 
+8326.726562x^3 + 27183.572266x^2 - 51370.457031x^1 + 42569.960938
+
+Temps d'execution : 0.000282 secondes
+\end{lstlisting}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{sources/Corentin/polynomApproch/results/graphs/43.png}
+    \caption{Interpolation du jeu de données 2 de l'annexe}
+\end{figure}
+\newpage
