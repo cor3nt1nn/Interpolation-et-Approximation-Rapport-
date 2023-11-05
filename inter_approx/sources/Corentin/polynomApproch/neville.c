@@ -123,7 +123,7 @@ int main(int argc, char const *argv[])
     printPolynomial(polynom);
     cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
     printf("\nTemps d'exécution : %f secondes\n", cpu_time_used);
-    writeDataIntoFile(data, polynom, n, 50, 1, fd);
+    writeDataIntoFile(data, polynom, n, 900, 3, fd);
     
     freeMatrix(data, 2);
     freePolynom(polynom);
