@@ -1,25 +1,3 @@
-\documentclass{report}
-\setlength{\headheight}{24.1638pt}
-%packages
-\usepackage[french]{babel}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{mathtools}
-\usepackage{amssymb}
-\usepackage{hyperref}
-\usepackage{float}
-\usepackage{amsthm}
-\usepackage{listings}
-\usepackage{geometry}
-\usepackage{setspace}
-\usepackage{graphicx}
-\usepackage{fancyhdr}
-\usepackage{subcaption}
-\usepackage{cleveref}
-\usepackage{tikz}
-\usepackage{soul}
-\usepackage{xcolor}
-\begin{document}
 \section{Interpolation par la méthode de Newton}
 \subsection{Introduction}
 La méthode de newton est une méthode d'interpolation qui permet de rendre le discret continu. C'est-à-dire que la méthode de newton peut établir, à partir d'un groupement de points, un polynome qui permet de tous les joindre. \\
@@ -182,55 +160,127 @@ Pour implémenter l'interpolation de newton, nous utiliserons ces préceptes:
 \item l'obtention du polynome d'interpolation sera comparé avec le resultat produit par sympy
 \item Le programme prend 3 paramètres: le fichier input, le fichier output et enfin un entier qui déterminera en combien de morceau équitable voulons nous ségmenter l'intervalle $[X[0], X[X.length-1]]$ 
 \end{itemize}
+\subsubsection{Entrée}
+Le programme prend un paramètre un fichier d'entrée qui contient:
+\begin{enumerate}
+\item le nombre de point à interpoler
+\item l'abscisse de chaque point à interpoler
+\item l'ordonnée de chaque point à interpoler
+\end{enumerate}
+En voici un exemple: 
+\begin{lstlisting}[mathescape=true, frame=single, basicstyle=\linespread{1.5}\fontsize{8}{10}\selectfont, caption="41.txt"]
+20
+0 2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38
+0.99987 0.99997 1 0.99997 0.99988 0.99973 0.99953 0.99927 0.99897 
+0.99846 0.99805 0.999751 0.99705 0.99650 0.99664 0.99533 0.99472 
+0.99472 0.99333 0.99326
+\end{lstlisting}
+\subsubsection{Sortie}
+Le programme produit un flux d'erreur contenant: les coefficients du polynome ainsi que le runtime du programme.
+Il produit aussi un fichier de sortie contenant sur chaque ligne respective:
+\begin{enumerate}
+\item Les abscisses de chaque point
+\item Les ordonnées de chaque point
+\item L'évaluation en chaque point de l'espace linéairement répartidu polynome 
+\item Les points composants l'espace équitablement réparti
+\end{enumerate}
 \newpage
 \subsection{Exemples d'exécution}
-Voici les différentes sorties du programme pour l'interpolation des jeux de données présents en annexe de ce document. Vous trouverez également un graphe représentant les points donnés, ainsi que le polynôme trouvé.
-\begin{lstlisting}[caption={Annexe 1 data} results, basicstyle=\fontsize{8}{10}\selectfont]
-    Polynom
-0.000000x^19 - 0.000000x^18 + 0.000000x^17 - 0.000000x^16 + 
-0.000000x^15 - 0.000000x^14 + 0.000000x^13 - 0.000000x^12 + 
-0.000001x^11 - 0.000025x^10 + 0.000361x^9 - 0.004044x^8 + 
-0.035004x^7 - 0.229974x^6 + 1.116527x^5 - 3.842630x^4 + 
-8.760551x^3 - 11.683978x^2 + 6.758180x^1 + 0.999870
-
-Temps d'execution : 0.096877 secondes
+\begin{lstlisting}[caption=res41.err, basicstyle=\fontsize{8}{10}\selectfont]
+9.998700e-01 x**0 6.757934e+00 x**1 -1.168356e+01 x**2 8.760246e+00 x**3
+-3.842500e+00 x**4 1.116491e+00 x**5 -2.299663e-01 x**6 
+3.500274e-02 x**7 -4.044372e-03 x**8 3.609857e-04 x**9 
+-2.515526e-05 x**10 1.375513e-06 x**11 
+-5.901659e-08 x**12 1.976062e-09 x**13 
+-5.102618e-11 x**14 9.953762e-13 x**15 
+-1.417421e-14 x**16 1.389305e-16 x**17 
+-8.374205e-19 x**18 2.338686e-21 x**19 
+runtime: 0.000544 seconds
+sympy: 
+2.338686e-21*x**18 - 8.81684622e-19*x**17 
++ 1.54699230754e-16*x**16 - 1.6774690216888e-14*x**15 
++ 1.25883277405627e-12*x**14 - 6.937477562031e-11*x**13 
++ 2.90745782473293e-9*x**12 - 9.46629303930446e-8*x**11 
++ 2.42500496454132e-6*x**10 - 4.91912593061752e-5*x**9 
++ 0.000791094691001013*x**8 - 0.010049379334445*x**7
+ + 0.0999430984450524*x**6 - 0.766352402471412*x**5 
+ + 4.42283722554877*x**4 - 18.498560227992*x**3 
+ + 52.6717277051879*x**2 - 90.8494202445378*x 
+ + 71.1983246848417
 \end{lstlisting}
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.7\textwidth]{sources/Corentin/polynomApproch/results/graphs/41.png}
+    \includegraphics[width=0.7\textwidth]{sources/max/res41.-fig.png}
     \caption{Interpolation du jeu de données 1 de l'annexe}
 \end{figure}
 \newpage
-\begin{lstlisting}[caption={Annexe 2 data} results, basicstyle=\fontsize{8}{10}\selectfont]
-    Polynom
-0.000000x^20 - 0.000000x^19 + 0.000000x^18 - 0.000000x^17 + 
-0.000000x^16 - 0.000000x^15 + 0.000000x^14 - 0.000000x^13 + 
-0.000000x^12 - 0.000002x^11 + 0.001309x^10 - 0.860809x^9 + 
-465.832642x^8 - 206286.906250x^7 + 74020648.000000x^6 - 
-21189636096.000000x^5 + 4725708685312.000000x^4 
-- 791294909612032.000000x^3 + 93583403189796864.000000x^2 - 
-6969840492355780608.000000x^1 + 245843147369784279040.000000
-
-Temps d'execution : 0.196364 secondes
+\begin{lstlisting}[caption=res42.err, basicstyle=\fontsize{8}{10}\selectfont]
+2.458392e+20 x**0 -6.969795e+18 x**1 
+9.358358e+16 x**2 -7.912985e+14 x**3 
+4.725728e+12 x**4 -2.118969e+10 x**5 
+7.402081e+07 x**6 -2.062875e+05 x**7 
+4.658351e+02 x**8 -8.608161e-01 x**9 
+1.308859e-03 x**10 -1.640429e-06 x**11 
+1.691843e-09 x**12 -1.428068e-12 x**13 
+9.769647e-16 x**14 -5.333753e-19 x**15 
+2.269488e-22 x**16 -7.253557e-26 x**17 
+1.638308e-29 x**18 -2.331672e-33 x**19 
+1.572710e-37 x**20 
+runtime: 0.000459 seconds
+sympy:
+1.57271e-37*x**19 - 2.214532951e-33*x**18 
++ 1.4733504470928e-29*x**17 - 6.15598452675997e-26*x**16 
++ 1.81085839954286e-22*x**15 - 3.98452585608767e-19*x**14 
++ 6.8006270504217e-16*x**13 - 9.2128735250787e-13*x**12 
++ 1.00524804614512e-9*x**11 - 8.91203913542775e-7*x**10 
++ 0.00064458235891123*x**9 - 0.380327915947197*x**8 
++ 182.308394414935*x**7 - 70370.74352899*x**6 
++ 21553545.6995935*x**5 - 5118647118.33503*x**4 
++ 908843928869.321*x**3 - 113546693973050.0*x**2 
++ 8.90320254837454e+15*x - 3.29603172723061e+17
 \end{lstlisting}
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.7\textwidth]{sources/Corentin/polynomApproch/results/graphs/42.png}
+    \includegraphics[width=0.7\textwidth]{sources/max/res42.-fig.png}
     \caption{Interpolation du jeu de données 2 de l'annexe}
 \end{figure}
 \newpage
-\begin{lstlisting}[caption={Annexe 3 data} results, basicstyle=\fontsize{8}{10}\selectfont]
-    Polynom
-0.000012x^10 - 0.001164x^9 + 0.049084x^8 - 1.220944x^7 + 
-19.789038x^6 - 217.668701x^5 + 1639.865601x^4 - 
-8326.726562x^3 + 27183.572266x^2 - 51370.457031x^1 + 42569.960938
-
-Temps d'execution : 0.000282 secondes
+\begin{lstlisting}[caption=res43.err, basicstyle=\fontsize{8}{10}\selectfont]
+4.256997e+04 x**0 -5.137055e+04 x**1 
+2.718367e+04 x**2 -8.326764e+03 x**3 
+1.639873e+03 x**4 -2.176697e+02 x**5 
+1.978914e+01 x**6 -1.220950e+00 x**7 
+4.908433e-02 x**8 -1.164297e-03 x**9 
+1.240079e-05 x**10 
+runtime: 0.000370 seconds
+sympy:
+1.240079e-5*x**9 - 0.0009920632*x**8 
++ 0.034549978806*x**7 - 0.686034520134*x**6 
++ 8.539600378064*x**5 - 68.950370431266*x**4 
++ 360.417137962484*x**3 - 1174.64043365198*x**2 
++ 2165.03144523226*x - 1720.15728683702
 \end{lstlisting}
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.7\textwidth]{sources/Corentin/polynomApproch/results/graphs/43.png}
-    \caption{Interpolation du jeu de données 2 de l'annexe}
+    \includegraphics[width=0.7\textwidth]{sources/max/res43.-fig.png}
+    \caption{Interpolation du jeu de données 3 de l'annexe}
 \end{figure}
 \newpage
-\end{document}
+\begin{lstlisting}[caption=res44.err ,basicstyle=\fontsize{8}{10}\selectfont]
+4.256997e+04 x**0 -5.137055e+04 x**1 2.718367e+04 x**2 
+-8.326764e+03 x**3 1.639873e+03 x**4 -2.176697e+02 x**5 
+1.978914e+01 x**6 -1.220950e+00 x**7 4.908433e-02 x**8 
+-1.164297e-03 x**9 1.240079e-05 x**10 
+runtime: 0.000363 seconds
+sympy:
+1.240079e-5*x**9 - 0.0009920632*x**8 
++ 0.034549978806*x**7 - 0.686034520134*x**6 
++ 8.539600378064*x**5 - 68.950370431266*x**4 
++ 360.417137962484*x**3 - 1174.64043365198*x**2 
++ 2165.03144523226*x - 1720.15728683702
+\end{lstlisting}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{sources/max/res44.-fig.png}
+    \caption{Interpolation du jeu de données 4 de l'annexe}
+\end{figure}
