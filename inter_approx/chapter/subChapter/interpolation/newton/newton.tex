@@ -132,57 +132,56 @@ Le polynome interpolateur du groupement de points donné est donc le trinome:
     $P_2(x)=1.1875x^2-10.125x+19.5$\\
 \end{center}
 \subsection{Algorithme}
-Nous allons poser l'algorithme suivant, qui reprend simplement la relation de récurrence vue dans la section \ref{recurrence}.
-\begin{lstlisting}[mathescape=true, frame=single, basicstyle=\linespread{1.5}\fontsize{8}{10}\selectfont]
-Fonction calculerPolynom(data, k, i, nbPoints):
-    si k=0:
-        renvoyer $p_0[x_i](x)$
-    sinon:
-        renvoyer $\frac{(x-x_{i+k})\times calculerPolynom(data, k-1, i, nbPoints)+(x_i-x)\times calculerPolynom(data, k-1, i+1, nbPoints)}{x_i-x_{i+k}}$
+Nous allons donc détailler les principales fonctions qui permettront par la suite l'implémentation de la méthode.
+\textit{Dans toute cette section, $X$, $Y$, $DD$, $E$, $ne$, $XN$ et $P$ désigneront respectivement: les abscisses des points à interpoler, les ordonnées des points à interpoler, le tableau des différences divisées, Le tableau contenant l'evaluation du polynome sur un espace linéairement réparti, le nombre de nombre à générer de manière équitable sur un intervalle, un tableau contenant l'intervalle lineaire, un tableau contenant les coefficients du polynome}
+\begin{lstlisting}[mathescape=true, frame=single, basicstyle=\linespread{1.5}\fontsize{8}{10}\selectfont, caption="Divided Difference function"]
+Fonction DividedDifference(X, Y, DD):
+   DD $\leftarrow$ Y
+   n $\leftarrow$ X.length()
+   for i from 0 to n-1:
+   	   for j from n-1 to i+1 by step of -1:
+   	   		DD[j] $\leftarrow \frac{D[j] - D[j-1]}{X[j] - X[j-i-1]}$
+		end
+    end
+\end{lstlisting}
+\begin{lstlisting}[mathescape=true, frame=single, basicstyle=\linespread{1.5}\fontsize{8}{10}\selectfont, caption="interpolate function"]
+Fonction double interpolate(DD,X,x):
+   double eval $\leftarrow 0$
+   n $\leftarrow$ X.length()
+   for i from n to 0 by step of -1:
+   		eval $\leftarrow eval \times (x-X[i]) + DD[i]$
+   	end
+   	return eval
+\end{lstlisting}
+\begin{lstlisting}[mathescape=true, frame=single, basicstyle=\linespread{1.5}\fontsize{8}{10}\selectfont, caption="find coefficient function"]
+Fonction coef(P, DD, X):
+   n $\leftarrow$ X.length()
+   P[0] $\leftarrow$ DD[n-1]
+   for i from n-2 to 0 by step of -1:
+   		for j from n-i-1 to j+1 by step of -1:
+   			P[j] $\leftarrow$ P[j-1] -X[i] $\times$ P[j]
+   		end
+   	P[0] $\leftarrow$ DD[0] - X[i] $\times$ P[0]
+   	end
+\end{lstlisting}
+Il s'agit uniquement de l'implémentation de la formule suivante:
+\begin{center}
+ $P_{N-1}(x) = b_0 + (x-x1)P_{N-2}(x)$
+\end{center}
+Pour générér un espace linéairement peuplé en fonction de $ne$, on générera les nombres ainsi:
+\begin{lstlisting}[mathescape=true, frame=single, basicstyle=\linespread{1.5}\fontsize{8}{10}\selectfont, caption="generate linear space"]
+some code:
+for i from X[0] to X[X.length-1] by step of $\frac{max(X) - min(X)}{ne}$
+some code
 \end{lstlisting}
 \subsection{Implémentation en C}
-Pour l'implémentation en C de cet algorithme, plusieurs contraintes nous font obstacle. Avant de commencer à implémenter notre code, nous devons les citer et trouver un moyen de les franchir.\vspace{6pt}\\
-Nous devrons réfléchir à:
+Pour implémenter l'interpolation de newton, nous utiliserons ces préceptes:
 \begin{itemize}
-    \item De quelle manière stocker les points donnés ?
-    \item Comment représenter un polynôme dans la mémoire ?
-    \item Comment réaliser des opérations sur ces polynômes ?\vspace{4pt}\\
+\item Les données seront stockées sous notation scientifique (pour ne pas avoir d'erreur d'arrondie lors de l'utilisation en python
+\item Le type polynome qui est un composée d'un entier \textbf{deg} et d'un tableau de coefficient double.
+\item l'obtention du polynome d'interpolation sera comparé avec le resultat produit par sympy
+\item Le programme prend 3 paramètres: le fichier input, le fichier output et enfin un entier qui déterminera en combien de morceau équitable voulons nous ségmenter l'intervalle $[X[0], X[X.length-1]]$ 
 \end{itemize}
-\label{header}
-Voici les décisions prises pour répondre à ces questions:\vspace{4pt}\\
-\underline{\textit{De quelle manière stocker les points donnés ?}}\vspace{4pt}\\
-Pour stocker les points fournis en entrée de notre programme, j'ai opté pour l'utilisation d'une matrice de flottants. La première ligne de cette matrice correspondra aux abscisses des points, tandis que la deuxième ligne contiendra leurs ordonnées. Sont alors mises en places des fonctions pour la création, le remplissage et l'affichage de la matrice, ainsi qu'une fonction pour libérer la mémoire allouée.\vspace{6pt}\\
-Ainsi, soient les points $(1,2), (2,4), (5,3)$, notre matrice contenant nos données sera alors $\begin{pmatrix}
-    1&2&5\\
-    2&4&3\\
-\end{pmatrix}$.\\
-\underline{\textit{Comment représenter un polynôme dans la mémoire ?}}\vspace{4pt}\\
-Pour représenter un polynôme en mémoire, j'ai choisi d'utiliser une nouvelle structure de données définissant le type \textbf{\_polynom}. Chaque élément de cette structure se voit attribuer un entier \textbf{degree}, qui correspond au degré maximal du polynôme, ainsi qu'un tableau de nombres flottants \textbf{coefficients}. Les coefficients sont stockés dans l'ordre de la base canonique de l'espace vectoriel $\mathbb{R}_n[X]$. Autrement dit, le polynôme $3x^2 + 4x - 2$ serait représenté par le tableau $[-2, 4, 3]$.\vspace{4pt}\\
-
-J'ai donc implémenté la structure \textbf{\_polynom} ainsi que les fonctions suivantes :\vspace{2pt}\\
-\begin{itemize}
-    \item La fonction \textbf{createPolynom} crée un nouveau polynôme en initialisant le degré et les coefficients.
-    \item La fonction \textbf{printPolynom} permet d'afficher le polynôme en console.
-    \item La fonction \textbf{freePolynom} libère la mémoire allouée pour stocker le polynôme, évitant ainsi les fuites de mémoire.\\
-\end{itemize}
-\underline{\textit{Comment réaliser des opérations sur ces polynômes ?}}\vspace{4pt}\\
-Dans le but d'implémenter la méthode de Neville, nous avons besoin de pouvoir manipuler des polynômes. Pour cela, j'ai codé les opérations nécessaires: l'addition de polynômes, la multiplication de polynômes, et la division d'un polynôme par un flottant.\vspace{4pt}\\
-\textbf{Addition de polynôme}\\
-L'opération d'addition de deux polynômes est relativement simple. Pour ce faire, il suffit d'additionner un à un les coefficients du polynôme de degré minimum, avec les coefficients de l'autre polynôme. Les résultats de ces additions sont ensuite stockés dans un nouveau polynôme, que nous renvoyons en sortie de la fonction d'addition.\vspace{4pt}\\
-\textbf{Multiplication de polynôme}\\
-La multiplication de polynôme, bien qu'aisée à effectuer manuellement, s'avère plus ardue lorsqu'il s'agit de l'implémenter de manière efficace. Heureusement ici, nous remarquons que la méthode de Neville n'utilise que la multiplication d'un polynôme de degré $1$ avec un polynôme de degré $k$. Cela facilitera grandement notre travail.\\
-Pour ce faire, nous prenons en paramètre de la fonction un nouveau polynôme de degré $k+1$. Ensuite, nous remplissons ce polynôme en multipliant chaque coefficient du polynôme de degré $k$ par le coefficient associé à $X$ de l'autre polynôme. Enfin, nous additionnons ces résultats avec les produits des coefficients du polynôme de degré $k$ avec le coefficient restant du polynôme de degré $1$. Nous stockons cela dans le nouveau polynôme.\vspace{2pt}\\
-Pour éclaircir tout cela, voici un exemple:\vspace{4pt}\\
-Supposons que l'on veuille réaliser le produit $(2X-1)(3X^2+2X+1)$.\\
-Les polynômes sont respectivement représentés par les tableaux $[-1, 2]$ et $[1, 2, 3]$.
-\begin{enumerate}
-    \item Nous avons notre nouveau polynôme de degré $3$: $[.,.,.,.]$
-    \item Nous multiplions les coefficients $[1,2,3]$ par le coefficient devant $X$ de l'autre polynôme, soit $2$. On obtient: $[.,2,4,6]$.
-    \item Enfin, on multplie les coefficients $[1,2,3]$ par l'autre coefficient de l'autre polynôme, soit $-1$. On ajoute ces produits dans le nouveau polynôme, ce qui donne: $[-1,0,1,6]$.
-\end{enumerate}
-Le produit de $(2X-1)(3X^2+2X+1)$ est donc $6X^3+X^2-1$.\vspace{4pt}\\
-\textbf{Division de polynôme}\\
-Pour effectuer la division d'un polynôme par un flottant, nous stockons simplement, dans un nouveau polynôme, les quotients résultants de la division de chaque coefficient du polynôme par le diviseur fourni en paramètre.
 \newpage
 \subsection{Exemples d'exécution}
 Voici les différentes sorties du programme pour l'interpolation des jeux de données présents en annexe de ce document. Vous trouverez également un graphe représentant les points donnés, ainsi que le polynôme trouvé.
