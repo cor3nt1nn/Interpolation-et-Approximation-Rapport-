@@ -25,14 +25,14 @@ Ainsi, la droite d'équation $y=-0.03x+1.11$ approxime les points $(1,3), (8,1),
 \newpage
 \subsection{Algorithme et Implémentation en C}
 \textit{\underline{Note: } pour l'implémentation de cette approximation, nous allons réutiliser la matrice de stockage des points, la structure \_polynom, ainsi que leurs fonctions associées (c.f. section \ref{header}).}\vspace{5pt}\\
-Pour implémenter cette approche, nous avons donc besoin de calculer les moyennes blablabla . Pour cela, nous avons implémenté une fonction \textbf{getMeans}. Voici son pseudo-code:\\
-\begin{lstlisting}[mathescape=true, basicstyle=\fontsize{8}{10}\selectfont]
-Fonction getMeans:
+Pour implémenter cette approche, nous avons donc besoin de calculer les moyennes. Pour cela, nous avons implémenté une fonction \textbf{getMeans}. Voici son pseudo-code:\\
+\begin{lstlisting}[mathescape=true, basicstyle=\fontsize{8}{10}\selectfont, frame=single]
+Fonction getMeans(float** data, int nbPoints):
     sumX = 0
     sumY = 0
     sumX2 = 0
     sumXY = 0;
-    Pour i de 0 a n:
+    Pour i de 0 a nbPoints-1:
         sumX$+=x_i$
         sumY$+=y_i$
         sumX2$+=x_i \times x_i$
@@ -40,11 +40,12 @@ Fonction getMeans:
     renvoyer $[\frac{sumX}{nbPoints}, \frac{sumY}{nbPoints}, \frac{sumX2}{nbPoints}, \frac{sumXY}{nbPoints}]$
 \end{lstlisting}
 Ceci fait, ils nous reste simplement à coder la fonction qui retourne le bon polynôme. Voici son implémentation en C:\\
-\begin{lstlisting}[mathescape=true, basicstyle=\fontsize{8}{10}\selectfont]
-_polynom computeLinearPolynom(float** data, int n) {
+\begin{lstlisting}[mathescape=true, basicstyle=\fontsize{8}{10}\selectfont, frame=single]
+_polynom computeLinearPolynom(float** data, int nbPoints) {
     _polynom polynom = createPolynom(1);
-    float* meanValues = getMeans(data, n);
-    polynom.coefficients[0] = ((meanValues[1] * meanValues[2]) - (meanValues[0] * meanValues[3])) /
+    float* meanValues = getMeans(data, nbPoints);
+    polynom.coefficients[0] = ((meanValues[1] * meanValues[2]) - 
+                                (meanValues[0] * meanValues[3])) /
                                     (meanValues[2] - (meanValues[0] * meanValues[0]));
     polynom.coefficients[1] = (meanValues[3] - (meanValues[0] * meanValues[1])) /
                                     (meanValues[2] - (meanValues[0] * meanValues[0]));
@@ -102,7 +103,7 @@ Calculons $z_i=ln(y_i)$ pour $i=0,1,2$:\\
         z_2&=ln(y_2)=ln(3)\thickapprox 1.1\vspace{4pt}\\
     \end{align*}
 \end{center}
-Calculons alors une droite de régression qui approxime tous les points $(x_i, z_i)$:\\
+Calculons alors une droite de régression qui approxime tous les points $(x_i, z_i)$ pour $i=0,..., n-1$:\\
 Après calculs, nous obtenons: \\
 \begin{center}
     $\overline{x}=2.5$\vspace{3pt}\\
@@ -110,7 +111,7 @@ Après calculs, nous obtenons: \\
     $\overline{x^2}\thickapprox6.42$\vspace{3pt}\\
     $\overline{zx}\thickapprox2.31$\vspace{3pt}\\
 \end{center}
-Nous pouvons alors calculer $B$ et $A$, pour obtenir la droite $Y=1.38x-2.63$.
+Nous pouvons alors calculer $B$ et $A$, pour obtenir la droite $Y=Ax+B=1.38x-2.63$.
 Enfin, il ne nous reste plus qu'à exprimer la forme exponentielle, en faisant le chemin inverse que celui qui est présenté au début de cette partie.\\
 \begin{center}
     \begin{align*}
@@ -123,7 +124,7 @@ Nous avons donc comme approximation exponentielle $y=0.072e^{1.38x}$.
 \subsection{Algorithme et Implémentation en C}
 \textit{\underline{Note: } pour l'implémentation de cette approximation, nous allons réutiliser la matrice de stockage des points, la structure \_polynom, ainsi que leurs fonctions associées (c.f. section \ref{header}). Nous réutiliserons également la fonction getMeans vu précédemment.}\vspace{5pt}\\
 Pour implémenter cette approximation, nous allons devoir créer une deuxième matrice de points, qui cette fois contiendra les points $(x_i, ln(y_i))$. Pour cela, nous allons coder une fonction \textit{completeDataMatrix}, qui sera par ailleurs réutilisée dans l'approximation par un ajustement de puissance. Cette fonction va prendre en paramètre la matrice de donnée initiale, une nouvelle matrice de donnée vierge, le nombre de points donnés, et le type d'approximation (exponentiel ou puissance). Voici son implémentation en C :\\
-\begin{lstlisting}[mathescape=true, basicstyle=\fontsize{8}{10}\selectfont]
+\begin{lstlisting}[mathescape=true, basicstyle=\fontsize{8}{10}\selectfont, frame=single]
     void completeDataMatrix(float** data, float** matrix, int nbData, char type){
         for (int i = 0; i < nbData; i++) {
             if(type=='e'){
@@ -135,7 +136,7 @@ Pour implémenter cette approximation, nous allons devoir créer une deuxième m
     }       
 \end{lstlisting}
 À partir de là, nous avons tous les outils nécessaires pour l'approximation. Voici le code source de la fonction qui calcule le polynôme recherché:\\
-\begin{lstlisting}[mathescape=true, basicstyle=\fontsize{8}{10}\selectfont]
+\begin{lstlisting}[mathescape=true, basicstyle=\fontsize{8}{10}\selectfont, frame=single]
 _polynom computeExponentialPolynom(float** data, int n) {
     //Creation d'une matrice pour les donnees necessaires a l'ajustement exponentiel
     float** dataForExp = createMatrix(2, n);
@@ -151,8 +152,8 @@ _polynom computeExponentialPolynom(float** data, int n) {
 \end{lstlisting}
 \newpage
 \subsection{Exemples d'exécutions et graphiques}
-Pour mettre en pratique le code précédemment présenté, nous pouvons l'exécuter avec le quatrième jeu de donnée présent en annexe du rapport. En effet, les points se pretent bien à une approximation exponentielle.\\
-Voici le polynôme retourné par le programme: $y=0.000020exp(0.143061x)$. Nous avons tracé le polynôme ainsi que les points fournis pour obtenir le graphique suivant:\\
+Pour mettre en pratique le code précédemment présenté, nous pouvons l'exécuter avec le quatrième jeu de données présent en annexe du rapport. En effet, les points se prêtent bien à une approximation exponentielle.\\
+Voici le polynôme retourné par le programme: $y=0.000020e^{0.143061x}$. Nous avons tracé le polynôme ainsi que les points fournis pour obtenir le graphique suivant:\\
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{sources/Corentin/approximationC/results/graphs/44.png}
@@ -172,7 +173,7 @@ On pose $Y=ln(y)$, $B=log(a)$, $A=b$ et $X=log(x)$. On peut alors écrire $Y=AX+
 À partir des points initiaux, nous allons calculer $w_i=log(x_i)$ et $z_i=log(y_i)$ pour $i=0,..., n-1$. Il suffira alors de calculer une droite de régression comme vue précedemment avec les points $(w_i, z_i)$. Enfin, nous calculerons la valeur de $a$ et $b$ avec ce qui a été posé précedemment pour obtenir un ajustement puissance. 
 \newpage
 \subsection{Résolution manuelle}
-Soient les points $(1,3), (2,7), (5, 1.3)$. Approximer ces points par un ajustement puissance.\\
+Soient les points $(1,3), (2,7), (5, 1.3)$. Approximons ces points par un ajustement puissance.\\
 Calculons $w_i=log(x_i)$ et $z_i=log(y_i)$ pour $i=0,1,2$:\\
 \begin{center}
     D'une part: 
@@ -210,7 +211,7 @@ Nous avons donc comme approximation exponentielle $y=5.12x^{-0.71}$.
 \subsection{Algorithme et Implémentation en C}
 \textit{\underline{Note: } pour l'implémentation de cette approximation, nous allons réutiliser la matrice de stockage des points, la structure \_polynom, ainsi que leurs fonctions associées (c.f. section \ref{header}). Nous réutiliserons également la fonction getMeans et la fonction completeDataMatrix vues précédemment.}\vspace{5pt}\\
 Pour implémenter cette approximation, nous allons aussi devoir créer une deuxième matrice de points, qui cette fois contiendra les points $(log(x_i), log(y_i))$. Pour cela, nous allons compléter la fonction \textit{completeDataMatrix}. Voici son implémentation en C :\\
-\begin{lstlisting}[mathescape=true, basicstyle=\fontsize{8}{10}\selectfont]
+\begin{lstlisting}[mathescape=true, basicstyle=\fontsize{8}{10}\selectfont, frame=single]
     void completeDataMatrix(float** data, float** matrix, int nbData, char type){
         for (int i = 0; i < nbData; i++) {
             ...
@@ -222,7 +223,7 @@ Pour implémenter cette approximation, nous allons aussi devoir créer une deuxi
     }       
 \end{lstlisting}
 À partir de là, nous avons tous les outils nécessaires pour l'approximation. Voici le code source de la fonction qui calcule le polynôme recherché:\\
-\begin{lstlisting}[mathescape=true, basicstyle=\fontsize{8}{10}\selectfont]
+\begin{lstlisting}[mathescape=true, basicstyle=\fontsize{8}{10}\selectfont, frame=single]
 _polynom computePowerPolynom(float** data, int n) {
     //Creation d'une matrice pour les donnees necessaires a l'ajustement puissance
     float** dataForPow = createMatrix(2, n);
@@ -238,11 +239,11 @@ _polynom computePowerPolynom(float** data, int n) {
 \end{lstlisting}
 \newpage
 \subsection{Exemples d'exécutions et graphiques}
-Pour mettre en pratique le code précédemment présenté, nous pouvons l'exécuter avec le dernier jeu de donnée présent en annexe du rapport. En effet, les points se prêtent bien à une approximation polynomiale.\\
-Voici le polynôme retourné par le programme: $y=696595.051263x^-2.527187$. Nous avons tracé le polynôme ainsi que les points fournis pour obtenir le graphique suivant:\\
+Pour mettre en pratique le code précédemment présenté, nous pouvons l'exécuter avec le dernier jeu de données présent en annexe du rapport. En effet, les points se prêtent bien à une approximation polynomiale.\\
+Voici le polynôme retourné par le programme: $y=696595.051263x^{-2.527187}$. Nous avons tracé le polynôme ainsi que les points fournis pour obtenir le graphique suivant:\\
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{sources/Corentin/approximationC/results/graphs/45.png}
+    \includegraphics[width=0.7\textwidth]{sources/Corentin/approximationC/results/graphs/45.png}
     \caption{Approximation du cinquième jeu de données}
 \end{figure}
 

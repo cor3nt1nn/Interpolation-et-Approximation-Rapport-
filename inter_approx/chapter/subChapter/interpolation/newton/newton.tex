@@ -1,6 +1,6 @@
 \section{Interpolation par la méthode de Newton}
 \subsection{Introduction}
-La méthode de newton est une méthode d'interpolation qui permet de rendre le discret continu. C'est-à-dire que la méthode de newton peut établir, à partir d'un groupement de points, un polynome qui permet de tous les joindre. \\
+La méthode de Newton est une méthode d'interpolation qui permet de rendre le discret continu. C'est-à-dire que la méthode de newton peut établir, à partir d'un groupement de points, un polynome qui permet de tous les joindre. \\
 \subsubsection{Quelques observations} \label{obs}
 Pour comprendre au mieux cette méthode d'interpolation, nous remarquerons que le polynome d'interpolation peut s'écrire de la forme suivante:\\
 \begin{center}
@@ -9,13 +9,13 @@ $P_{N-1}(x) = b_0 + b_1 (x-x_1) + b_2(x-x_1)(x-x_2)+ \ldots+b_{N-1}(x-x_1)\ldots
 Où $N$ est le nombre de points à interpoler. \\
 $x_i, \forall i = 1,\ldots,N-1$ désigne l'élément i de la matrice des abscisses des points à interpoler  \\
 et $b_i, \forall i=0,\ldots, N-1$, la $i^{\text{ème}}$ différence divisée. \\
-\textit{On déduira alors que la méthode de Newton produira un polynome de degrè au plus N-1 pour N point}.\\
+\textit{On déduira alors que la méthode de Newton produira un polynome de degré au plus N-1 pour N points}.\\
 
 
-\subsection{Différence Divisée}
-\textit{Dans cette section, $xi$ (respect. $y_i$ désigne l'abscisse (respect. l'ordonnée) du point $i$ et $b_i$ la $i^{\text{ème}}$ différence divisée}
-Comme mentionné dans \ref{obs}, le polynome, pour exister, a besoin des \textbf{Différences Divisées}, notée \textit{$b_i$}.\\
-Elles s'obtiennent en cherchant les coefficients $b_i$ tel que:
+\subsection{Différences Divisées}
+\textit{Dans cette section, $x_i$ (respect. $y_i$ désigne l'abscisse (respect. l'ordonnée) du point $i$ et $b_i$ la $i^{\text{ème}}$ différence divisée.}\\
+Comme mentionné dans \ref{obs}, le polynome, pour exister, a besoin des \textbf{Différences Divisées}, notées \textit{$b_i$}.\\
+Elles s'obtiennent en cherchant les coefficients $b_i$ tels que:
 \begin{center}
 $P_{N-1}(x_i) = y_i, \forall i=1,\ldots,N$
 \end{center}
@@ -31,9 +31,9 @@ y_N &= P_{N-1}(x_N)= b_0 + (x_N - x_1)b_1+\ldots+(x_N-x_1)\ldots(x_N-x_{N-1})b_{
 $
 \end{center}
 \subsubsection{Notation}
-On sythéthisera le système obtenu précédemment ainsi: \\
+On synthétisera le système obtenu précédemment ainsi: \\
 \begin{center}
-La différence divisée $i$ de degrès $k$: $\bigtriangledown^{k}y_i = \frac{\bigtriangledown{k-1}y_i -\bigtriangledown^{k-1}y_k}{x_i - x_k}, i= k+1, \ldots, N.  $
+La différence divisée $i$ de degré $k$: $\bigtriangledown^{k}y_i = \frac{\bigtriangledown^{k-1}y_i -\bigtriangledown^{k-1}y_k}{x_i - x_k}, i= k+1, \ldots, N.  $
 \end{center}
 \subsubsection{Conséquences}
 Le coefficient $b_i$ est donc calculable ainsi:
@@ -50,15 +50,14 @@ La seconde conséquence est la réecriture du polynome comme suit:\\
 &P_0(x) = b_{N-1} \\
 &P_1(x) = b_{N-2} + (x-x_{N-1})P_0(x) \\
 &\ldots = \ldots \\
-&P_{N-1}(x) = b_0 + (x-x1)P_{N-2}(x)
+&P_{N-1}(x) = b_0 + (x-x_1)P_{N-2}(x)
 \end{align*}
 \subsubsection{Remarque}
-Le système de calcul de la différence divisée peut être visualiser comme une liste où on peut écraser l'élément $k$ par sa différence divisée.\\
+Le système de calcul de la différence divisée peut être visualisé comme une liste où l'on peut écraser l'élément $k$ par sa différence divisée.\\
 Ceci nous sera utile lors de l'implémentation (utilisation de tableau et non de matrice).
-\newpage
 \subsection{Résolution Manuelle}
 \begin{center}
-    \textbf{Mettons en application la méthode de newton}\vspace{6pt}\\
+    \textbf{Mettons en application la méthode de Newton}\vspace{6pt}\\
 \begin{tabular}{|c|c|c|c|}
     \hline
     $x_i$ & 2 & 6 & 4 \\
@@ -153,17 +152,18 @@ for i from X[0] to X[X.length-1] by step of $\frac{max(X) - min(X)}{ne}$
 some code
 \end{lstlisting}
 \subsection{Implémentation en C}
-Pour implémenter l'interpolation de newton, nous utiliserons ces préceptes:
+Pour implémenter l'interpolation de Newton, nous utiliserons ces préceptes:
 \begin{itemize}
-\item Les données seront stockées sous notation scientifique (pour ne pas avoir d'erreur d'arrondie lors de l'utilisation en python
-\item Le type polynome qui est un composée d'un entier \textbf{deg} et d'un tableau de coefficient double.
-\item l'obtention du polynome d'interpolation sera comparé avec le resultat produit par sympy
-\item Le programme prend 3 paramètres: le fichier input, le fichier output et enfin un entier qui déterminera en combien de morceau équitable voulons nous ségmenter l'intervalle $[X[0], X[X.length-1]]$ 
+\item Les données seront stockées sous notation scientifique (pour ne pas avoir d'erreurs d'arrondi lors de l'utilisation en Python)
+\item Le type polynome qui est un composé d'un entier \textbf{deg} et d'un tableau de coefficients double.
+\item L'obtention du polynome d'interpolation sera comparé avec le resultat produit par sympy
+\item Le programme prend 3 paramètres: le fichier input, le fichier output et enfin un entier qui déterminera en combien de morceau équitable voulons-nous segmenter l'intervalle \\
+$[X[0], X[X.length-1]]$ 
 \end{itemize}
 \subsubsection{Entrée}
 Le programme prend un paramètre un fichier d'entrée qui contient:
 \begin{enumerate}
-\item le nombre de point à interpoler
+\item le nombre de points à interpoler
 \item l'abscisse de chaque point à interpoler
 \item l'ordonnée de chaque point à interpoler
 \end{enumerate}
@@ -181,12 +181,12 @@ Il produit aussi un fichier de sortie contenant sur chaque ligne respective:
 \begin{enumerate}
 \item Les abscisses de chaque point
 \item Les ordonnées de chaque point
-\item L'évaluation en chaque point de l'espace linéairement répartidu polynome 
+\item L'évaluation en chaque point de l'espace linéairement répartis du polynome 
 \item Les points composants l'espace équitablement réparti
 \end{enumerate}
 \newpage
 \subsection{Exemples d'exécution}
-\textit{Dans tout les exemples, le polynome sera évalués sur 900 points équitablement rétablis sur l'intervalle}
+\textit{Dans tous les exemples, le polynome sera évalués sur 900 points équitablement répartis sur l'intervalle}
 \begin{lstlisting}[caption=res41.err, basicstyle=\fontsize{8}{10}\selectfont]
 9.998700e-01 x**0 6.757934e+00 x**1 -1.168356e+01 x**2 8.760246e+00 x**3
 -3.842500e+00 x**4 1.116491e+00 x**5 -2.299663e-01 x**6 
