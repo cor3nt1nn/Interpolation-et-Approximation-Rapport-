@@ -5,6 +5,10 @@
 #include <time.h>
 //
 #include "inter.h"
+/*
+ * Evaluation of Polynomial coefficients
+ *
+ */
 void coeff(_polynom *P, double *DD, int *X, int n) {
   P->coef[0] = DD[n - 1];
   for (int i = n - 2; i >= 0; i--) {
@@ -14,6 +18,9 @@ void coeff(_polynom *P, double *DD, int *X, int n) {
     P->coef[0] = DD[i] - X[i] * P->coef[0];
   }
 }
+/*
+ * Calculation of divided differences
+ */
 void dd(int *X, double *Y, double *M, int n) {
   for (int i = 0; i < n; i++)
     M[i] = Y[i];
@@ -23,6 +30,9 @@ void dd(int *X, double *Y, double *M, int n) {
     }
   }
 }
+/*
+ * Evaluation of the polynom in a point x
+ */
 double interpolate(double *DD, int *X, int n, double x) {
   double eval = 0;
   for (int i = n; i >= 0; i--) {
@@ -30,9 +40,6 @@ double interpolate(double *DD, int *X, int n, double x) {
   }
   return eval;
 }
-/*
- * revoir le calcul des coefficients du polynome, différence divisée ok
- */
 int main(int argc, char *argv[]) {
   (void)argc;
   int n;
